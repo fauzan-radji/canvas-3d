@@ -23,10 +23,8 @@ window.addEventListener("mousemove", (e) => {
   startPoint.y = e.clientY;
 
   // rotate the cube
-  // clearCanvas();
   canvas.clear();
-  // const points = tesseract.rotateX(-moves.y).project(distance);
-  // draw(points, "4d");
   const points = cube.rotateY(moves.x).rotateX(-moves.y).project(distance);
+
   draw(points);
 });
