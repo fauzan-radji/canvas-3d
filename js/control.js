@@ -24,7 +24,13 @@ window.addEventListener("mousemove", (e) => {
 
   // rotate the cube
   canvas.clear();
-  const points = cube.rotateY(moves.x).rotateX(-moves.y).project(distance);
+  cubes.forEach((cube) => {
+    cube.rotateY(moves.x).rotateX(-moves.y).draw(distance);
+  });
 
-  draw(points);
+  points.forEach((point) => {
+    point.rotateY(moves.x).rotateX(-moves.y).draw(distance);
+  });
+
+  draw();
 });

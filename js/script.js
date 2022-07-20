@@ -1,40 +1,63 @@
-const cube = new Cube();
+const cubes = [
+  new Cube(-2, -2, 0),
+  new Cube(-2, 0, 0),
+  new Cube(-2, 2, 0),
+  new Cube(0, -2, 0),
+  new Cube(0, 0, 0),
+  new Cube(0, 2, 0),
+  new Cube(2, -2, 0),
+  new Cube(2, 0, 0),
+  new Cube(2, 2, 0),
+];
+const points = [
+  new Point(0, 0, 1),
+  new Point(0, 1, 0),
+  new Point(1, 0, 0),
+  new Point(0, 0, -1),
+  new Point(0, -1, 0),
+  new Point(-1, 0, 0),
+];
 
 // const distance = 2.5;
 const distance = 5;
-draw(cube.rotateX(45).rotateY(35).project(distance));
+cubes.forEach((cube) => {
+  cube.draw(distance);
+});
+
+points.forEach((point) => {
+  point.draw(distance);
+});
+
+draw();
 
 // setInterval(() => {
 //   canvas.clear();
-//   const point = cube.rotateZ(1).project(distance);
-//   draw(point);
+//   cube.rotateX(1).rotateY(-1).rotateZ(-1).draw(distance);
 // }, 50);
 
 function scale(point, s = 300) {
   return point * s;
 }
 
-function draw(points, type = "3d") {
-  points = points.map((point) => {
-    point.x = canvas.center.x + scale(point.x);
-    point.y = canvas.center.y + scale(point.y);
+function draw() {
+  points[0].connect(points[5]);
+  points[0].connect(points[4]);
+  points[0].connect(points[2]);
+  points[0].connect(points[1]);
 
-    return point;
-  });
+  points[3].connect(points[5]);
+  points[3].connect(points[4]);
+  points[3].connect(points[2]);
+  points[3].connect(points[1]);
 
-  for (let point of points) {
-    canvas.beginPath().circle(point, 5).fill().closePath();
-  }
-
-  for (let i = 0; i < 4; i++) {
-    connect(i + 4, ((i + 1) % 4) + 4, points);
-    connect(i, i + 4, points);
-    connect(i, (i + 1) % 4, points);
-  }
+  points[1].connect(points[5]);
+  points[5].connect(points[4]);
+  points[4].connect(points[2]);
+  points[2].connect(points[1]);
 }
 
 function connect(a, b, points) {
-  canvas.beginPath().line(points[a], points[b]).stroke().closePath();
+  points[a].connect(points[b]);
 }
 
 function sleep(ms) {

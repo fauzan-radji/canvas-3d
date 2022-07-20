@@ -29,7 +29,7 @@ class Vector {
    * @param {matrix} m
    * @returns {Vector}
    */
-  fromMatrix(m) {
+  static fromMatrix(m) {
     return new Vector(...m.flat());
   }
 }
