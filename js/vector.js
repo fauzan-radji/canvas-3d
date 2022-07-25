@@ -21,7 +21,7 @@ class Vector {
 
     if (typeof this.w === "number") m.push([this.w]);
 
-    return m;
+    return new Matrix(m);
   }
 
   /**
@@ -30,32 +30,8 @@ class Vector {
    * @returns {Vector}
    */
   static fromMatrix(m) {
-    return new Vector(...m.flat());
+    return new Vector(...m.matrix.flat());
   }
-}
-
-/**
- * multiply mat1 and mat2
- * @param {matrix} mat1
- * @param {matrix} mat2
- * @returns {matrix}
- */
-function multiply(mat1, mat2) {
-  const m1 = mat1.length;
-  const m2 = mat1[0].length;
-  const n2 = mat2[0].length;
-
-  const mResult = makeArray(m1);
-  for (let i = 0; i < m1; i++) {
-    for (let j = 0; j < n2; j++) {
-      mResult[i][j] = 0;
-      for (let x = 0; x < m2; x++) {
-        mResult[i][j] += mat1[i][x] * mat2[x][j];
-      }
-    }
-  }
-
-  return mResult;
 }
 
 function printMatrix(matrix) {

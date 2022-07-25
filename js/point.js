@@ -1,4 +1,4 @@
-class Point extends Vector {
+class Vertex extends Vector {
   constructor(x, y, z = false, w = false) {
     super(x, y, z, w);
   }
@@ -9,14 +9,13 @@ class Point extends Vector {
    * @returns
    */
   project(distance = 5) {
-    const point = this;
-    const z = 1 / (distance - point.z);
-    const projection = [
+    const z = 1 / (distance - this.z);
+    const projection = new Matrix([
       [z, 0, 0],
       [0, z, 0],
-    ];
+    ]);
 
-    const projected = this.applyMatrixToPoint(projection, point);
+    const projected = this.applyMatrixToPoint(projection, this);
 
     projected.x = canvas.center.x + scale(projected.x);
     projected.y = canvas.center.y + scale(projected.y);
@@ -29,15 +28,7 @@ class Point extends Vector {
    * @param {number} angle in degrees
    */
   rotateX(angle) {
-    // convert the angle to degrees
-    angle = (angle * Math.PI) / 180;
-    const rotationMatrix = [
-      [1, 0, 0],
-      [0, Math.cos(angle), -Math.sin(angle)],
-      [0, Math.sin(angle), Math.cos(angle)],
-    ];
-
-    const newPoint = this.applyMatrixToPoint(rotationMatrix, this);
+    const newPoint = this.toMatrix().rotateX(angle).toVector();
 
     this.x = newPoint.x;
     this.y = newPoint.y;
@@ -51,15 +42,7 @@ class Point extends Vector {
    * @param {number} angle in degrees
    */
   rotateY(angle) {
-    // convert the angle to degrees
-    angle = (angle * Math.PI) / 180;
-    const rotationMatrix = [
-      [Math.cos(angle), 0, Math.sin(angle)],
-      [0, 1, 0],
-      [-Math.sin(angle), 0, Math.cos(angle)],
-    ];
-
-    const newPoint = this.applyMatrixToPoint(rotationMatrix, this);
+    const newPoint = this.toMatrix().rotateY(angle).toVector();
 
     this.x = newPoint.x;
     this.y = newPoint.y;
@@ -73,15 +56,7 @@ class Point extends Vector {
    * @param {number} angle in degrees
    */
   rotateZ(angle) {
-    // convert the angle to degrees
-    angle = (angle * Math.PI) / 180;
-    const rotationMatrix = [
-      [Math.cos(angle), -Math.sin(angle), 0],
-      [Math.sin(angle), Math.cos(angle), 0],
-      [0, 0, 1],
-    ];
-
-    const newPoint = this.applyMatrixToPoint(rotationMatrix, this);
+    const newPoint = this.toMatrix().rotateZ(angle).toVector();
 
     this.x = newPoint.x;
     this.y = newPoint.y;
@@ -92,9 +67,9 @@ class Point extends Vector {
 
   applyMatrixToPoint(matrix, point) {
     const vec = point.toMatrix();
-    const projected = multiply(matrix, vec);
+    const projected = vec.multiply(matrix);
 
-    const newVec = Point.fromMatrix(projected);
+    const newVec = Vertex.fromMatrix(projected);
     return newVec;
   }
 
@@ -111,9 +86,5 @@ class Point extends Vector {
     const p2 = point.project(distance);
 
     canvas.beginPath().line(p1, p2).stroke().closePath();
-  }
-
-  static fromMatrix(m) {
-    return new Point(...m.flat());
   }
 }

@@ -1,28 +1,16 @@
-const cubes = [
-  new Cube(-2, -2, 0),
-  new Cube(-2, 0, 0),
-  new Cube(-2, 2, 0),
-  new Cube(0, -2, 0),
-  new Cube(0, 0, 0),
-  new Cube(0, 2, 0),
-  new Cube(2, -2, 0),
-  new Cube(2, 0, 0),
-  new Cube(2, 2, 0),
-];
+const cube = new Cube(0, 0, 0);
 const points = [
-  new Point(0, 0, 1),
-  new Point(0, 1, 0),
-  new Point(1, 0, 0),
-  new Point(0, 0, -1),
-  new Point(0, -1, 0),
-  new Point(-1, 0, 0),
+  new Vertex(0, 0, 1),
+  new Vertex(0, 1, 0),
+  new Vertex(1, 0, 0),
+  new Vertex(0, 0, -1),
+  new Vertex(0, -1, 0),
+  new Vertex(-1, 0, 0),
 ];
 
 // const distance = 2.5;
 const distance = 5;
-cubes.forEach((cube) => {
-  cube.draw(distance);
-});
+cube.draw(distance);
 
 points.forEach((point) => {
   point.draw(distance);
@@ -54,10 +42,6 @@ function draw() {
   points[5].connect(points[4]);
   points[4].connect(points[2]);
   points[2].connect(points[1]);
-}
-
-function connect(a, b, points) {
-  points[a].connect(points[b]);
 }
 
 function sleep(ms) {
