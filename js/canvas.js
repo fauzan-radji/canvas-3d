@@ -12,6 +12,9 @@ class Canvas {
     this.canvas.width = innerWidth;
     this.canvas.height = innerHeight;
 
+    this.width = innerWidth;
+    this.height = innerHeight;
+
     this.center = new Vector(
       Math.round(this.canvas.width / 2),
       Math.round(this.canvas.height / 2)

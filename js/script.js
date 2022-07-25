@@ -1,31 +1,45 @@
-const cube = new Cube(0, 0, 0);
-const points = [
-  new Vertex(0, 0, 1),
+const cube = new Cube();
+const axis = [
+  // CENTER
+  new Vertex(0, 0, 0),
+
+  // UP
   new Vertex(0, 1, 0),
+
+  // RIGHT
   new Vertex(1, 0, 0),
-  new Vertex(0, 0, -1),
-  new Vertex(0, -1, 0),
-  new Vertex(-1, 0, 0),
+
+  // FRONT
+  new Vertex(0, 0, 1),
 ];
 
-// const distance = 2.5;
-const distance = 5;
-cube.draw(distance);
+// const points = [
+//   new Vertex(0, 0, 1),
+//   new Vertex(0, 1, 0),
+//   new Vertex(1, 0, 0),
+//   new Vertex(0, 0, -1),
+//   new Vertex(0, -1, 0),
+//   new Vertex(-1, 0, 0),
+// ];
 
-points.forEach((point) => {
-  point.draw(distance);
-});
+cube.draw();
+// draw();
 
-draw();
+// axis.forEach((point) => {
+//   point.translateX(-2).translateY(-2);
+//   point.draw();
+// });
 
-// setInterval(() => {
-//   canvas.clear();
-//   cube.rotateX(1).rotateY(-1).rotateZ(-1).draw(distance);
-// }, 50);
+// for (let i = 1; i < axis.length; i++) {
+//   axis[i].connect(axis[0]);
+// }
 
-function scale(point, s = 300) {
-  return point * s;
-}
+setInterval(() => {
+  canvas.clear();
+  cube.rotateX(1).rotateY(1.5).rotateZ(0.5).draw();
+  // for (const point of points) point.rotateX(2).rotateY(-1.5).rotateZ(0.5);
+  // draw();
+}, 50);
 
 function draw() {
   points[0].connect(points[5]);

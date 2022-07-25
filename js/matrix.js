@@ -59,6 +59,18 @@ class Matrix {
     return this;
   }
 
+  perspective(fov, aspect, znear, zfar) {
+    const newMatrix = this.multiply(
+      Matrix.perspective(fov, aspect, znear, zfar)
+    );
+
+    this.matrix = newMatrix.matrix;
+    this.rows = newMatrix.rows;
+    this.cols = newMatrix.cols;
+
+    return this;
+  }
+
   toVector() {
     return Vector.fromMatrix(this);
   }
@@ -75,8 +87,11 @@ class Matrix {
   }
 
   static rotateY(angle) {
+    // I dunno what's wrong with this, but the rotation is getting reversed
+    // so I have to use the opposite angle
+
     // convert the angle to radians
-    angle = (angle * Math.PI) / 180;
+    angle = (angle * Math.PI) / -180;
 
     return new Matrix([
       [Math.cos(angle), 0, Math.sin(angle)],
@@ -86,13 +101,31 @@ class Matrix {
   }
 
   static rotateZ(angle) {
+    // I dunno what's wrong with this, but the rotation is getting reversed
+    // so I have to use the opposite angle
+
     // convert the angle to radians
-    angle = (angle * Math.PI) / 180;
+    angle = (angle * Math.PI) / -180;
 
     return new Matrix([
       [Math.cos(angle), -Math.sin(angle), 0],
       [Math.sin(angle), Math.cos(angle), 0],
       [0, 0, 1],
+    ]);
+  }
+
+  static perspective(fov, aspect, znear, zfar) {
+    // convert the angle to radians
+    fov = (fov * Math.PI) / 180;
+
+    const f = 1 / Math.tan(fov / 2);
+    const q = zfar / (zfar - znear);
+
+    return new Matrix([
+      [aspect * f, 0, 0, 0],
+      [0, f, 0, 0],
+      [0, 0, q, q * znear],
+      [0, 0, 1, 0],
     ]);
   }
 }

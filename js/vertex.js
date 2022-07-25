@@ -8,17 +8,30 @@ class Vertex extends Vector {
    * @param {number} distance
    * @returns
    */
-  project(distance = 5) {
-    const z = 1 / (distance - this.z);
-    const projection = new Matrix([
-      [z, 0, 0],
-      [0, z, 0],
-    ]);
+  project() {
+    // translating before projecting
+    const z = -this.z - 3;
 
-    const projected = this.applyMatrixToPoint(projection, this);
+    const aspect = canvas.height / canvas.width;
+    const fov = 90;
+    const znear = 1;
+    const zfar = 1000;
+    const projected = new Vertex(this.x, this.y, z, 1)
+      .toMatrix()
+      .perspective(fov, aspect, znear, zfar)
+      .toVector();
 
-    projected.x = canvas.center.x + scale(projected.x);
-    projected.y = canvas.center.y + scale(projected.y);
+    if (projected.w !== 0) {
+      projected.x /= projected.w;
+      projected.y /= projected.w;
+      projected.z /= projected.w;
+    }
+
+    projected.x = canvas.center.x + (projected.x * canvas.width) / 2;
+    projected.y = canvas.center.y + (projected.y * canvas.height) / 2;
+
+    // Invert x axis
+    projected.x = canvas.width - projected.x;
 
     return projected;
   }
@@ -65,25 +78,30 @@ class Vertex extends Vector {
     return this;
   }
 
-  applyMatrixToPoint(matrix, point) {
-    const vec = point.toMatrix();
-    const projected = vec.multiply(matrix);
-
-    const newVec = Vertex.fromMatrix(projected);
-    return newVec;
+  translateX(distance) {
+    this.x += distance;
+    return this;
   }
 
-  draw(distance) {
-    const point = this.project(distance);
+  translateY(distance) {
+    this.y += distance;
+    return this;
+  }
+
+  translateZ(distance) {
+    this.z += distance;
+    return this;
+  }
+
+  draw() {
+    const point = this.project();
 
     canvas.beginPath().circle(point, 5).fill().closePath();
-
-    return point;
   }
 
   connect(point) {
-    const p1 = this.project(distance);
-    const p2 = point.project(distance);
+    const p1 = this.project();
+    const p2 = point.project();
 
     canvas.beginPath().line(p1, p2).stroke().closePath();
   }
