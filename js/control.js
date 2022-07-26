@@ -24,11 +24,5 @@ window.addEventListener("mousemove", (e) => {
 
   // rotate the cube
   canvas.clear();
-  cube.rotateY(moves.x).rotateX(-moves.y);
-  cube.draw();
-
-  // points.forEach((point) => {
-  //   point.rotateY(moves.x).rotateX(-moves.y);
-  // });
-  // draw();
+  cube.rotateY(moves.x).rotateX(-moves.y).draw();
 });

@@ -6,14 +6,13 @@ class Matrix {
   }
 
   /**
-   * multiply mat1 and mat2
-   * @param {matrix} mat1
-   * @param {matrix} mat2
-   * @returns {matrix}
+   * multiply this with another matrix
+   * @param {Matrix} m
+   * @returns {Matrix}
    */
-  multiply(mat1) {
-    const m1 = mat1.rows;
-    const m2 = mat1.cols;
+  multiply(m) {
+    const m1 = m.rows;
+    const m2 = m.cols;
     const n2 = this.cols;
 
     const mResult = makeArray(m1);
@@ -21,7 +20,7 @@ class Matrix {
       for (let j = 0; j < n2; j++) {
         mResult[i][j] = 0;
         for (let x = 0; x < m2; x++) {
-          mResult[i][j] += mat1.matrix[i][x] * this.matrix[x][j];
+          mResult[i][j] += m.matrix[i][x] * this.matrix[x][j];
         }
       }
     }
@@ -71,10 +70,23 @@ class Matrix {
     return this;
   }
 
+  /**
+   * Convert this Matrix to Vector
+   * @returns {Vector}
+   */
   toVector() {
     return Vector.fromMatrix(this);
   }
 
+  print() {
+    console.log(this.matrix.map((row) => row.join(" ")).join("\n"));
+  }
+
+  /**
+   * Generate a matrix for a rotation around the X axis
+   * @param {number} angle angle in degrees
+   * @returns {Matrix}
+   */
   static rotateX(angle) {
     // convert the angle to radians
     angle = (angle * Math.PI) / 180;
@@ -86,6 +98,11 @@ class Matrix {
     ]);
   }
 
+  /**
+   * Generate a matrix for a rotation around the Y axis
+   * @param {number} angle angle in degrees
+   * @returns {Matrix}
+   */
   static rotateY(angle) {
     // I dunno what's wrong with this, but the rotation is getting reversed
     // so I have to use the opposite angle
@@ -100,6 +117,11 @@ class Matrix {
     ]);
   }
 
+  /**
+   * Generate a matrix for a rotation around the Z axis
+   * @param {number} angle angle in degrees
+   * @returns {Matrix}
+   */
   static rotateZ(angle) {
     // I dunno what's wrong with this, but the rotation is getting reversed
     // so I have to use the opposite angle
@@ -114,6 +136,14 @@ class Matrix {
     ]);
   }
 
+  /**
+   *
+   * @param {number} fov field of view in degrees
+   * @param {number} aspect aspect ratio of the screen (width / height)
+   * @param {number} znear near plane distance (closest objects)
+   * @param {number} zfar far plane distance (farthest objects)
+   * @returns {Matrix}
+   */
   static perspective(fov, aspect, znear, zfar) {
     // convert the angle to radians
     fov = (fov * Math.PI) / 180;
@@ -128,4 +158,13 @@ class Matrix {
       [0, 0, 1, 0],
     ]);
   }
+}
+
+function makeArray(len) {
+  const arr = [];
+  for (let i = 0; i < len; i++) {
+    arr[i] = [];
+  }
+
+  return arr;
 }

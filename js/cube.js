@@ -40,47 +40,39 @@ class Cube {
     ];
   }
 
-  /**
-   * Projecting 3D matrix to 2D matrix
-   * @param {number} distance
-   * @returns
-   */
-  project(distance = 5) {
+  project() {
     return this.points.map((point) => {
-      return point.project(distance);
+      return point.project();
     });
   }
 
   /**
-   * Rotate 3d matrix around X axis
+   * Rotate 3d cube around X axis
    * @param {number} angle in degrees
    */
   rotateX(angle) {
     this.points = this.points.map((point) => point.rotateX(angle));
-    // this.tris = this.tris.map((tri) => tri.rotateX(angle));
 
     return this;
   }
 
   /**
-   * Rotate 3d matrix around Y axis
+   * Rotate 3d cube around Y axis
    * @param {number} angle in degrees
    */
   rotateY(angle) {
     this.points = this.points.map((point) => point.rotateY(angle));
-    // this.tris = this.tris.map((tri) => tri.rotateY(angle));
 
     return this;
   }
 
   /**
-   * Rotate 3d matrix around Z axis
+   * Rotate 3d cube around Z axis
    * @param {number} angle in degrees
    */
   rotateZ(angle) {
     // convert the angle to degrees
     this.points = this.points.map((point) => point.rotateZ(angle));
-    // this.tris = this.tris.map((tri) => tri.rotateZ(angle));
 
     return this;
   }

@@ -70,9 +70,3 @@ class Canvas {
     return this;
   }
 }
-
-const canvas = new Canvas("canvas");
-
-window.addEventListener("resize", () => {
-  draw(cube.project(distance));
-});
