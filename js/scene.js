@@ -1,9 +1,18 @@
 class Scene {
-  constructor({ canvas, fov = 90, znear = 1, zfar = 1000 }) {
+  constructor({
+    canvas,
+    fov = 90,
+    znear = 1,
+    zfar = 1000,
+    camera,
+    lightDirection,
+  }) {
     this.fov = fov;
     this.znear = znear;
     this.zfar = zfar;
     this.canvas = canvas;
+    this.camera = camera;
+    this.lightDirection = lightDirection;
   }
 
   set fov(fov) {
@@ -22,6 +31,14 @@ class Scene {
     this.canvas_ = canvas;
   }
 
+  set camera(camera) {
+    this.camera_ = camera;
+  }
+
+  set lightDirection(lightDirection) {
+    this.lightDirection_ = lightDirection;
+  }
+
   get fov() {
     return this.fov_;
   }
@@ -36,5 +53,13 @@ class Scene {
 
   get canvas() {
     return this.canvas_;
+  }
+
+  get camera() {
+    return this.camera_;
+  }
+
+  get lightDirection() {
+    return this.lightDirection_;
   }
 }

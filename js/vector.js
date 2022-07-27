@@ -14,8 +14,8 @@ class Vector {
    * @returns
    */
   project(scene) {
-    // translating before projecting
-    const z = -this.z - 3;
+    // by default, the z axis is pointing towards the camera, so we need to reverse it
+    const z = -this.z;
 
     const aspect = scene.canvas.height / scene.canvas.width;
     const projected = new Vertex(this.x, this.y, z, 1)
@@ -113,6 +113,21 @@ class Vector {
    */
   dot(v) {
     return this.x * v.x + this.y * v.y + this.z * v.z;
+  }
+
+  /**
+   * Subtracting this Vector and v Vector
+   * @param {Vector} v antoher Vector
+   * @returns {Vector}
+   */
+  subtract(v) {
+    return new Vector(this.x - v.x, this.y - v.y, this.z - v.z);
+  }
+
+  normalize() {
+    const length = Math.sqrt(this.x ** 2 + this.y ** 2 + this.z ** 2);
+
+    return new Vector(this.x / length, this.y / length, this.z / length);
   }
 
   /**

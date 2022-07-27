@@ -3,23 +3,12 @@ class Octahedron extends Shape3d {
     super(size, x, y, z);
 
     const points = [
-      // back 0
-      new Vertex(0, 0, 1),
-
-      // front 1
-      new Vertex(0, 0, -1),
-
-      // right 2
-      new Vertex(1, 0, 0),
-
-      // top 3
-      new Vertex(0, 1, 0),
-
-      // left 4
-      new Vertex(-1, 0, 0),
-
-      // bottom 5
-      new Vertex(0, -1, 0),
+      new Vertex(0 + x, 0 + y, size + z),
+      new Vertex(0 + x, 0 + y, -size + z),
+      new Vertex(size + x, 0 + y, 0 + z),
+      new Vertex(0 + x, size + y, 0 + z),
+      new Vertex(-size + x, 0 + y, 0 + z),
+      new Vertex(0 + x, -size + y, 0 + z),
     ];
 
     this.points = points;

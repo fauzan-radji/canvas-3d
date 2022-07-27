@@ -3,6 +3,9 @@ class Canvas {
     this.id = id;
     this.canvas = document.getElementById(id);
     this.ctx = this.canvas.getContext("2d");
+    this.fillStyle = "#fff";
+    this.strokeStyle = "#fff";
+    this.strokeWidth = 1;
 
     this.resize(width, height);
   }
@@ -15,10 +18,6 @@ class Canvas {
       Math.round(this.width / 2),
       Math.round(this.height / 2)
     );
-
-    this.ctx.fillStyle = "#fff";
-    this.ctx.strokeStyle = "#fff";
-    this.ctx.lineWidth = 1;
 
     return this;
   }
@@ -36,6 +35,18 @@ class Canvas {
     return this;
   }
 
+  moveTo(point) {
+    this.ctx.moveTo(point.x, point.y);
+
+    return this;
+  }
+
+  lineTo(point) {
+    this.ctx.lineTo(point.x, point.y);
+
+    return this;
+  }
+
   beginPath() {
     this.ctx.beginPath();
 
@@ -48,13 +59,15 @@ class Canvas {
     return this;
   }
 
-  stroke() {
+  stroke(color) {
+    this.strokeStyle = color;
     this.ctx.stroke();
 
     return this;
   }
 
-  fill() {
+  fill(color = "#fff") {
+    this.fillStyle = color;
     this.ctx.fill();
 
     return this;
@@ -64,6 +77,21 @@ class Canvas {
     this.ctx.clearRect(0, 0, this.width, this.height);
 
     return this;
+  }
+
+  set fillStyle(color) {
+    this.fillStyle_ = color;
+    this.ctx.fillStyle = color;
+  }
+
+  set strokeStyle(color) {
+    this.strokeStyle_ = color;
+    this.ctx.strokeStyle = color;
+  }
+
+  set strokeWidth(width) {
+    this.strokeWidth_ = width;
+    this.ctx.strokeWidth = width;
   }
 
   set width(width) {
@@ -80,5 +108,17 @@ class Canvas {
 
   get height() {
     return this.canvas.height;
+  }
+
+  get fillStyle() {
+    this.fillStyle_;
+  }
+
+  get strokeStyle() {
+    this.strokeStyle_;
+  }
+
+  get strokeWidth() {
+    this.strokeWidth_;
   }
 }

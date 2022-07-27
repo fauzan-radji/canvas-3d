@@ -12,8 +12,39 @@ class Triangle {
   }
 
   draw(scene) {
+    this.luminance = this.normal.dot(scene.lightDirection);
+
+    scene.canvas
+      .beginPath()
+      .moveTo(this.p1.project(scene))
+      .lineTo(this.p2.project(scene))
+      .lineTo(this.p3.project(scene))
+      .lineTo(this.p1.project(scene))
+      .fill(this.color)
+      .stroke(this.color)
+      .closePath();
+  }
+
+  stroke(scene) {
     this.p1.connect(this.p2, scene);
     this.p2.connect(this.p3, scene);
     this.p3.connect(this.p1, scene);
+  }
+
+  set luminance(lum) {
+    this.luminance_ = lum * 100;
+
+    this.color = `hsl(0,0%,${this.luminance}%)`;
+  }
+
+  get luminance() {
+    return this.luminance_;
+  }
+
+  get normal() {
+    const line1 = this.p2.subtract(this.p1);
+    const line2 = this.p3.subtract(this.p1);
+
+    return line1.cross(line2).normalize();
   }
 }

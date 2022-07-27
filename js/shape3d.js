@@ -45,7 +45,22 @@ class Shape3d {
     return this;
   }
 
+  translateZ(distance) {
+    this.points = this.points.map((point) => point.translateZ(distance));
+
+    return this;
+  }
+
   draw(scene) {
-    for (const tri of this.tris) tri.draw(scene);
+    const camera = scene.camera;
+
+    for (const tri of this.tris) {
+      const normal = tri.normal;
+      const point = tri.p1;
+
+      if (normal.dot(point.subtract(camera)) < 0) tri.draw(scene);
+    }
+
+    return this;
   }
 }
