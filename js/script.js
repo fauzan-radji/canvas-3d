@@ -1,8 +1,17 @@
-const canvas1 = new Canvas("canvas1", innerWidth / 2, innerHeight);
-const canvas2 = new Canvas("canvas2", innerWidth / 2, innerHeight);
+const canvas1 = new Canvas({
+  id: "canvas1",
+  width: innerWidth / 2,
+  height: innerHeight - 51,
+});
+
+const canvas2 = new Canvas({
+  id: "canvas2",
+  width: innerWidth / 2,
+  height: innerHeight - 51,
+});
 
 const fov = 90;
-const znear = 1;
+const znear = 0.1;
 const zfar = 1000;
 const vCamera = new Vector(0, 0, 0);
 const vLightDirection = new Vector(0, 0, -1).normalize();
@@ -25,31 +34,40 @@ const scene2 = new Scene({
   lightDirection: vLightDirection,
 });
 
-const cube = new Cube(1.5);
-const octahedron = new Octahedron(1);
-cube.translateZ(3).draw(scene1).translateZ(-3);
-octahedron.translateZ(3).draw(scene2).translateZ(-3);
+const openfile1 = document.getElementById("canvas1-open");
+const openfile2 = document.getElementById("canvas2-open");
+
+const objects = [];
+
+openfile1.addEventListener("click", async (e) => {
+  const object = await Shape3d.fromFile();
+
+  objects.push(object);
+});
+
+const cube = new Cube(3);
+const octahedron = new Octahedron(2);
+
+objects.push(cube, octahedron);
+
+for (const object of objects) draw(object);
+
 const fps = 20;
 
 setInterval(() => {
   scene1.canvas.clear();
   scene2.canvas.clear();
-  rotate(cube);
-  rotate(octahedron);
-
-  draw(cube, scene1);
-  draw(octahedron, scene2);
+  for (const object of objects) {
+    object
+      .rotateX(1 / (fps / 20))
+      .rotateY(1.5 / (fps / 20))
+      .rotateZ(0.5 / (fps / 20));
+    draw(object);
+  }
 }, 1000 / fps);
 
-function draw(shape, scene) {
-  shape.translateZ(3).draw(scene).translateZ(-3);
-}
-
-function rotate(shape) {
-  shape
-    .rotateX(1 / (fps / 20))
-    .rotateY(1.5 / (fps / 20))
-    .rotateZ(0.5 / (fps / 20));
+function draw(shape) {
+  shape.translateZ(7).draw(scene1).draw(scene2).translateZ(-7);
 }
 
 window.addEventListener("resize", () => {

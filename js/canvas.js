@@ -1,5 +1,5 @@
 class Canvas {
-  constructor(id, width, height) {
+  constructor({ id, width, height }) {
     this.id = id;
     this.canvas = document.getElementById(id);
     this.ctx = this.canvas.getContext("2d");
