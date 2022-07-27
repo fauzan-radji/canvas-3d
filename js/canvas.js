@@ -1,23 +1,19 @@
 class Canvas {
-  constructor(id) {
+  constructor(id, width, height) {
     this.id = id;
     this.canvas = document.getElementById(id);
     this.ctx = this.canvas.getContext("2d");
 
-    this.setup();
-    window.addEventListener("resize", () => this.setup());
+    this.resize(width, height);
   }
 
-  setup() {
-    this.canvas.width = innerWidth;
-    this.canvas.height = innerHeight;
-
-    this.width = innerWidth;
-    this.height = innerHeight;
+  resize(width, height) {
+    this.width = width;
+    this.height = height;
 
     this.center = new Vector(
-      Math.round(this.canvas.width / 2),
-      Math.round(this.canvas.height / 2)
+      Math.round(this.width / 2),
+      Math.round(this.height / 2)
     );
 
     this.ctx.fillStyle = "#fff";
@@ -65,8 +61,24 @@ class Canvas {
   }
 
   clear() {
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.ctx.clearRect(0, 0, this.width, this.height);
 
     return this;
+  }
+
+  set width(width) {
+    this.canvas.width = width;
+  }
+
+  set height(height) {
+    this.canvas.height = height;
+  }
+
+  get width() {
+    return this.canvas.width;
+  }
+
+  get height() {
+    return this.canvas.height;
   }
 }

@@ -11,9 +11,9 @@ class Triangle {
     this.p3 = p3;
   }
 
-  draw() {
-    this.p1.connect(this.p2);
-    this.p2.connect(this.p3);
-    this.p3.connect(this.p1);
+  draw(scene) {
+    this.p1.connect(this.p2, scene);
+    this.p2.connect(this.p3, scene);
+    this.p3.connect(this.p1, scene);
   }
 }

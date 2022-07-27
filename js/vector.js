@@ -13,17 +13,14 @@ class Vector {
    * @param {number} distance
    * @returns
    */
-  project() {
+  project(scene) {
     // translating before projecting
     const z = -this.z - 3;
 
-    const aspect = canvas.height / canvas.width;
-    const fov = 90;
-    const znear = 1;
-    const zfar = 1000;
+    const aspect = scene.canvas.height / scene.canvas.width;
     const projected = new Vertex(this.x, this.y, z, 1)
       .toMatrix()
-      .perspective(fov, aspect, znear, zfar)
+      .perspective(scene.fov, aspect, scene.znear, scene.zfar)
       .toVector();
 
     if (projected.w !== 0) {
@@ -32,11 +29,13 @@ class Vector {
       projected.z /= projected.w;
     }
 
-    projected.x = canvas.center.x + (projected.x * canvas.width) / 2;
-    projected.y = canvas.center.y + (projected.y * canvas.height) / 2;
+    projected.x =
+      scene.canvas.center.x + (projected.x * scene.canvas.width) / 2;
+    projected.y =
+      scene.canvas.center.y + (projected.y * scene.canvas.height) / 2;
 
     // Invert x axis
-    projected.x = canvas.width - projected.x;
+    projected.x = scene.canvas.width - projected.x;
 
     return projected;
   }
@@ -92,6 +91,28 @@ class Vector {
   translateZ(distance) {
     this.z += distance;
     return this;
+  }
+
+  /**
+   * Cross product of this Vector and v Vector
+   * @param {Vector} v another vector
+   * @returns {Vector}
+   */
+  cross(v) {
+    return new Vector(
+      this.y * v.z - this.z * v.y,
+      this.z * v.x - this.x * v.z,
+      this.x * v.y - this.y * v.x
+    );
+  }
+
+  /**
+   * Dot product of this Vector and v Vector
+   * @param {Vector} v antoher Vector
+   * @returns {Vector}
+   */
+  dot(v) {
+    return this.x * v.x + this.y * v.y + this.z * v.z;
   }
 
   /**

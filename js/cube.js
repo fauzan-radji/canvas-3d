@@ -1,5 +1,6 @@
-class Cube {
+class Cube extends Shape3d {
   constructor(size = 1, x = 0, y = 0, z = 0) {
+    super(size, x, y, z);
     const points = [
       new Vertex(-size / 2 + x, -size / 2 + y, -size / 2 + z),
       new Vertex(-size / 2 + x, size / 2 + y, -size / 2 + z),
@@ -38,46 +39,5 @@ class Cube {
       new Triangle(points[4], points[0], points[3]),
       new Triangle(points[4], points[3], points[7]),
     ];
-  }
-
-  project() {
-    return this.points.map((point) => {
-      return point.project();
-    });
-  }
-
-  /**
-   * Rotate 3d cube around X axis
-   * @param {number} angle in degrees
-   */
-  rotateX(angle) {
-    this.points = this.points.map((point) => point.rotateX(angle));
-
-    return this;
-  }
-
-  /**
-   * Rotate 3d cube around Y axis
-   * @param {number} angle in degrees
-   */
-  rotateY(angle) {
-    this.points = this.points.map((point) => point.rotateY(angle));
-
-    return this;
-  }
-
-  /**
-   * Rotate 3d cube around Z axis
-   * @param {number} angle in degrees
-   */
-  rotateZ(angle) {
-    // convert the angle to degrees
-    this.points = this.points.map((point) => point.rotateZ(angle));
-
-    return this;
-  }
-
-  draw() {
-    for (const tri of this.tris) tri.draw();
   }
 }
