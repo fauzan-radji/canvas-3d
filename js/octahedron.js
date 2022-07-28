@@ -13,7 +13,7 @@ class Octahedron extends Shape3d {
 
     this.points = points;
 
-    this.tris = [
+    this.triangles = [
       // BACK
       new Triangle(points[0], points[2], points[3]),
       new Triangle(points[0], points[3], points[4]),

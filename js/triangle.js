@@ -25,10 +25,19 @@ class Triangle {
       .closePath();
   }
 
-  stroke(scene) {
-    this.p1.connect(this.p2, scene);
-    this.p2.connect(this.p3, scene);
-    this.p3.connect(this.p1, scene);
+  isFacingCamera(camera) {
+    return this.normal.dot(this.p1.subtract(camera)) < 0;
+  }
+
+  stroke(scene, color = "#000") {
+    scene.canvas
+      .beginPath()
+      .moveTo(this.p1.project(scene))
+      .lineTo(this.p2.project(scene))
+      .lineTo(this.p3.project(scene))
+      .lineTo(this.p1.project(scene))
+      .stroke(color)
+      .closePath();
   }
 
   set luminance(lum) {

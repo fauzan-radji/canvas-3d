@@ -1,12 +1,6 @@
-const canvas1 = new Canvas({
-  id: "canvas1",
-  width: innerWidth / 2,
-  height: innerHeight - 51,
-});
-
-const canvas2 = new Canvas({
-  id: "canvas2",
-  width: innerWidth / 2,
+const canvas = new Canvas({
+  id: "canvas",
+  width: innerWidth,
   height: innerHeight - 51,
 });
 
@@ -16,8 +10,8 @@ const zfar = 1000;
 const vCamera = new Vector(0, 0, 0);
 const vLightDirection = new Vector(0, 0, -1).normalize();
 
-const scene1 = new Scene({
-  canvas: canvas1,
+const scene = new Scene({
+  canvas: canvas,
   fov,
   znear,
   zfar,
@@ -25,56 +19,45 @@ const scene1 = new Scene({
   lightDirection: vLightDirection,
 });
 
-const scene2 = new Scene({
-  canvas: canvas2,
-  fov: fov,
-  znear,
-  zfar,
-  camera: vCamera,
-  lightDirection: vLightDirection,
-});
+const openfileButton = document.getElementById("open-file");
 
-const openfile1 = document.getElementById("canvas1-open");
-const openfile2 = document.getElementById("canvas2-open");
-
-const objects = [];
-
-openfile1.addEventListener("click", async (e) => {
+openfileButton.addEventListener("click", async (e) => {
   const object = await Shape3d.fromFile();
 
-  objects.push(object);
+  scene.addObjects(object);
+  draw();
 });
 
-const cube = new Cube(3);
-const octahedron = new Octahedron(2);
+// const cube = new Cube(3);
+// const octahedron = new Octahedron(2);
+// scene.addObjects(cube, octahedron);
 
-objects.push(cube, octahedron);
-
-for (const object of objects) draw(object);
-
+draw();
 const fps = 20;
 
 setInterval(() => {
-  scene1.canvas.clear();
-  scene2.canvas.clear();
-  for (const object of objects) {
+  for (const object of scene.objects)
     object
       .rotateX(1 / (fps / 20))
       .rotateY(1.5 / (fps / 20))
       .rotateZ(0.5 / (fps / 20));
-    draw(object);
-  }
+
+  draw();
 }, 1000 / fps);
 
-function draw(shape) {
-  shape.translateZ(7).draw(scene1).draw(scene2).translateZ(-7);
+function draw() {
+  for (const object of scene.objects) object.translateZ(7);
+
+  scene.render();
+
+  for (const object of scene.objects) object.translateZ(-7);
 }
 
 window.addEventListener("resize", () => {
-  scene1.canvas.resize(innerWidth / 2, innerHeight);
-  scene2.canvas.resize(innerWidth / 2, innerHeight);
-  cube.draw(scene1);
-  octahedron.draw(scene2);
+  scene.canvas.resize(innerWidth, innerHeight - 51);
+  for (const object of scene.objects) {
+    draw(object);
+  }
 });
 
 function sleep(ms) {

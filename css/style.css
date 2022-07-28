@@ -8,30 +8,21 @@ body * {
 body {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
   background-color: #222;
   height: 100vh;
   overflow: hidden;
 }
 
-.control-container {
-  height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .open-file {
-  margin: 0 1em;
+  margin: 1em;
   background-color: #fff;
   color: #222;
   padding: 0.5em 0.8em;
   border-radius: 0.25em;
   border: none;
   cursor: pointer;
-}
-
-.canvas-container {
-  display: flex;
 }
 
 canvas {

@@ -22,15 +22,11 @@ window.addEventListener("mousemove", (e) => {
   startPoint.x = e.clientX;
   startPoint.y = e.clientY;
 
-  scene1.canvas.clear();
-  scene2.canvas.clear();
+  scene.canvas.clear();
 
   // rotate the cube
-  for (const object of objects) {
+  for (const object of scene.objects) {
     object.rotateY(moves.x).rotateX(-moves.y);
-    draw(object);
+    draw();
   }
-
-  // octahedron.rotateY(moves.x).rotateX(-moves.y);
-  // draw(octahedron, scene2);
 });

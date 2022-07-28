@@ -59,7 +59,7 @@ class Canvas {
     return this;
   }
 
-  stroke(color) {
+  stroke(color = "#000") {
     this.strokeStyle = color;
     this.ctx.stroke();
 
