@@ -11,16 +11,16 @@ class Matrix {
    * @returns {Matrix}
    */
   multiply(m) {
-    const m1 = m.rows;
-    const m2 = m.cols;
-    const n2 = this.cols;
+    const m1 = this.rows;
+    const m2 = this.cols;
+    const n2 = m.cols;
 
     const mResult = makeArray(m1);
     for (let i = 0; i < m1; i++) {
       for (let j = 0; j < n2; j++) {
         mResult[i][j] = 0;
         for (let x = 0; x < m2; x++) {
-          mResult[i][j] += m.matrix[i][x] * this.matrix[x][j];
+          mResult[i][j] += this.matrix[i][x] * m.matrix[x][j];
         }
       }
     }
@@ -29,7 +29,7 @@ class Matrix {
   }
 
   rotateX(angle) {
-    const newMatrix = this.multiply(Matrix.rotateX(angle));
+    const newMatrix = Matrix.rotateX(angle).multiply(this);
 
     this.matrix = newMatrix.matrix;
     this.rows = newMatrix.rows;
@@ -39,7 +39,7 @@ class Matrix {
   }
 
   rotateY(angle) {
-    const newMatrix = this.multiply(Matrix.rotateY(angle));
+    const newMatrix = Matrix.rotateY(angle).multiply(this);
 
     this.matrix = newMatrix.matrix;
     this.rows = newMatrix.rows;
@@ -49,7 +49,7 @@ class Matrix {
   }
 
   rotateZ(angle) {
-    const newMatrix = this.multiply(Matrix.rotateZ(angle));
+    const newMatrix = Matrix.rotateZ(angle).multiply(this);
 
     this.matrix = newMatrix.matrix;
     this.rows = newMatrix.rows;
@@ -59,8 +59,8 @@ class Matrix {
   }
 
   perspective(fov, aspect, znear, zfar) {
-    const newMatrix = this.multiply(
-      Matrix.perspective(fov, aspect, znear, zfar)
+    const newMatrix = Matrix.perspective(fov, aspect, znear, zfar).multiply(
+      this
     );
 
     this.matrix = newMatrix.matrix;
@@ -123,8 +123,8 @@ class Matrix {
    * @returns {Matrix}
    */
   static rotateZ(angle) {
-    // I dunno what's wrong with this, but the rotation is getting reversed
-    // so I have to use the opposite angle
+    // since the z axis is pointing in the same direction as the camera, we need to reverse the angle
+    // so, from the camera's perspective, the rotation is counterclockwise
 
     // convert the angle to radians
     angle = (angle * Math.PI) / -180;
@@ -154,7 +154,7 @@ class Matrix {
     return new Matrix([
       [aspect * f, 0, 0, 0],
       [0, f, 0, 0],
-      [0, 0, q, q * znear],
+      [0, 0, q, -q * znear],
       [0, 0, 1, 0],
     ]);
   }

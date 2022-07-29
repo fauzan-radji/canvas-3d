@@ -19,7 +19,7 @@ class Shape3d {
    * @param {number} angle in degrees
    */
   rotateX(angle) {
-    this.points = this.points.map((point) => point.rotateX(angle));
+    for (const point of this.points) point.rotateX(angle);
 
     return this;
   }
@@ -29,7 +29,7 @@ class Shape3d {
    * @param {number} angle in degrees
    */
   rotateY(angle) {
-    this.points = this.points.map((point) => point.rotateY(angle));
+    for (const point of this.points) point.rotateY(angle);
 
     return this;
   }
@@ -39,14 +39,13 @@ class Shape3d {
    * @param {number} angle in degrees
    */
   rotateZ(angle) {
-    // convert the angle to degrees
-    this.points = this.points.map((point) => point.rotateZ(angle));
+    for (const point of this.points) point.rotateZ(angle);
 
     return this;
   }
 
   translateZ(distance) {
-    this.points = this.points.map((point) => point.translateZ(distance));
+    for (const point of this.points) point.translateZ(distance);
 
     return this;
   }

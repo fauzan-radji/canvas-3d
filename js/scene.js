@@ -45,6 +45,7 @@ class Scene {
   }
 
   stroke() {
+    this.canvas.clear();
     for (const tri of this.triangles) {
       tri.stroke(this, "#f00");
     }

@@ -28,13 +28,13 @@ class Vector {
       projected.z /= z;
     }
 
-    projected.x =
-      scene.canvas.center.x + (projected.x * scene.canvas.width) / 2;
-    projected.y =
-      scene.canvas.center.y + (projected.y * scene.canvas.height) / 2;
+    // scale the projected vector to the screen size
+    projected.x *= scene.canvas.width;
+    projected.y *= scene.canvas.height;
 
-    // Invert x axis
-    // projected.x = scene.canvas.width - projected.x;
+    // translate the projected vector to the center of the canvas
+    projected.x += scene.canvas.center.x;
+    projected.y += scene.canvas.center.y;
 
     return projected;
   }

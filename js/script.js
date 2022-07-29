@@ -30,11 +30,6 @@ openfileButton.addEventListener("click", async (e) => {
 
 const object = Shape3d.fromString({ str: AXIS, size: 0.5 });
 scene.addObjects(object);
-draw();
-
-// const cube = new Cube(3);
-// const octahedron = new Octahedron(2);
-// scene.addObjects(cube, octahedron);
 
 draw();
 const fps = 20;

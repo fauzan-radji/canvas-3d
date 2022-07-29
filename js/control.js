@@ -26,7 +26,7 @@ window.addEventListener("mousemove", (e) => {
 
   // rotate the cube
   for (const object of scene.objects) {
-    object.rotateY(moves.x).rotateX(-moves.y);
+    object.rotateY(-moves.x).rotateX(-moves.y);
     draw();
   }
 });
