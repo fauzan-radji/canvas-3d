@@ -64,7 +64,7 @@ class Shape3d {
     return this;
   }
 
-  static async fromFile(size = 1, x = 0, y = 0, z = 0) {
+  static async fromFile({ size = 1, x = 0, y = 0, z = 0 } = {}) {
     const pickerOpts = {
       types: [
         {
@@ -83,7 +83,11 @@ class Shape3d {
     const fileData = await fileHandle.getFile();
     const contents = await fileData.text();
 
-    const lines = contents.split("\r\n");
+    return Shape3d.fromString({ str: contents, size, x, y, z });
+  }
+
+  static fromString({ str, size = 1, x = 0, y = 0, z = 0 }) {
+    const lines = str.split(/\n/g);
 
     const theObject = new Shape3d();
     const COMMENT = "#";

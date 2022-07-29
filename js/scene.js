@@ -11,6 +11,7 @@ class Scene {
     this.znear = znear;
     this.zfar = zfar;
     this.canvas = canvas;
+    this.aspectRatio = canvas.height / canvas.width;
     this.camera = camera;
     this.lightDirection = lightDirection;
 
@@ -25,8 +26,8 @@ class Scene {
     }
   }
 
-  sortTriangles(triangles) {
-    triangles.sort((a, b) => {
+  sortTriangles() {
+    this.triangles.sort((a, b) => {
       const z1 = (a.p1.z + a.p2.z + a.p3.z) / 3;
       const z2 = (b.p1.z + b.p2.z + b.p3.z) / 3;
       return z2 - z1;
@@ -34,13 +35,11 @@ class Scene {
   }
 
   render() {
-    const trianglesFacingCamera = this.triangles.filter((tri) =>
-      tri.isFacingCamera(this.camera)
-    );
-    this.sortTriangles(trianglesFacingCamera);
+    this.sortTriangles();
 
     this.canvas.clear();
-    for (const tri of trianglesFacingCamera) {
+    for (const tri of this.triangles) {
+      if (!tri.isFacingCamera(this.camera)) continue;
       tri.draw(this);
     }
   }
@@ -49,6 +48,11 @@ class Scene {
     for (const tri of this.triangles) {
       tri.stroke(this, "#f00");
     }
+  }
+
+  resize(width, height) {
+    this.canvas.resize(width, height);
+    this.aspectRatio = height / width;
   }
 
   set fov(fov) {
@@ -69,6 +73,10 @@ class Scene {
 
   set camera(camera) {
     this.camera_ = camera;
+  }
+
+  set aspectRatio(aspectRatio) {
+    this.aspectRatio_ = aspectRatio;
   }
 
   set lightDirection(lightDirection) {
@@ -93,6 +101,10 @@ class Scene {
 
   get camera() {
     return this.camera_;
+  }
+
+  get aspectRatio() {
+    return this.aspectRatio_;
   }
 
   get lightDirection() {

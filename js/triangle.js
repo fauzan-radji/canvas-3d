@@ -13,13 +13,16 @@ class Triangle {
 
   draw(scene) {
     this.luminance = this.normal.dot(scene.lightDirection);
+    const p1 = this.p1.project(scene);
+    const p2 = this.p2.project(scene);
+    const p3 = this.p3.project(scene);
 
     scene.canvas
       .beginPath()
-      .moveTo(this.p1.project(scene))
-      .lineTo(this.p2.project(scene))
-      .lineTo(this.p3.project(scene))
-      .lineTo(this.p1.project(scene))
+      .moveTo(p1)
+      .lineTo(p2)
+      .lineTo(p3)
+      .lineTo(p1)
       .fill(this.color)
       .stroke(this.color)
       .closePath();

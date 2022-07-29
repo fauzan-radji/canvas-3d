@@ -17,16 +17,15 @@ class Vector {
     // by default, the z axis is pointing towards the camera, so we need to reverse it
     const z = -this.z;
 
-    const aspect = scene.canvas.height / scene.canvas.width;
     const projected = new Vertex(this.x, this.y, z, 1)
       .toMatrix()
-      .perspective(scene.fov, aspect, scene.znear, scene.zfar)
+      .perspective(scene.fov, scene.aspectRatio, scene.znear, scene.zfar)
       .toVector();
 
-    if (projected.w !== 0) {
-      projected.x /= projected.w;
-      projected.y /= projected.w;
-      projected.z /= projected.w;
+    if (z !== 0) {
+      projected.x /= z;
+      projected.y /= z;
+      projected.z /= z;
     }
 
     projected.x =
@@ -35,7 +34,7 @@ class Vector {
       scene.canvas.center.y + (projected.y * scene.canvas.height) / 2;
 
     // Invert x axis
-    projected.x = scene.canvas.width - projected.x;
+    // projected.x = scene.canvas.width - projected.x;
 
     return projected;
   }

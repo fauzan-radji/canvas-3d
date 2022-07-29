@@ -28,6 +28,10 @@ openfileButton.addEventListener("click", async (e) => {
   draw();
 });
 
+const object = Shape3d.fromString({ str: AXIS, size: 0.5 });
+scene.addObjects(object);
+draw();
+
 // const cube = new Cube(3);
 // const octahedron = new Octahedron(2);
 // scene.addObjects(cube, octahedron);
@@ -35,15 +39,15 @@ openfileButton.addEventListener("click", async (e) => {
 draw();
 const fps = 20;
 
-setInterval(() => {
-  for (const object of scene.objects)
-    object
-      .rotateX(1 / (fps / 20))
-      .rotateY(1.5 / (fps / 20))
-      .rotateZ(0.5 / (fps / 20));
+// setInterval(() => {
+//   for (const object of scene.objects)
+//     object
+//       .rotateX(1 / (fps / 20))
+//       .rotateY(1.5 / (fps / 20))
+//       .rotateZ(0.5 / (fps / 20));
 
-  draw();
-}, 1000 / fps);
+//   draw();
+// }, 1000 / fps);
 
 function draw() {
   for (const object of scene.objects) object.translateZ(7);
@@ -54,10 +58,8 @@ function draw() {
 }
 
 window.addEventListener("resize", () => {
-  scene.canvas.resize(innerWidth, innerHeight - 51);
-  for (const object of scene.objects) {
-    draw(object);
-  }
+  scene.resize(innerWidth, innerHeight - 51);
+  for (const object of scene.objects) draw(object);
 });
 
 function sleep(ms) {
