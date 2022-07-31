@@ -123,6 +123,24 @@ class Vector {
     return new Vector(this.x - v.x, this.y - v.y, this.z - v.z);
   }
 
+  /**
+   * Adding this Vector and v Vector
+   * @param {Vector} v antoher Vector
+   * @returns {Vector}
+   */
+  add(v) {
+    return new Vector(this.x + v.x, this.y + v.y, this.z + v.z);
+  }
+
+  /**
+   * Multiply this Vector by k
+   * @param {number} k scaling factor
+   * @returns {Vector}
+   */
+  multiply(k) {
+    return new Vector(this.x * k, this.y * k, this.z * k);
+  }
+
   normalize() {
     const length = Math.sqrt(this.x ** 2 + this.y ** 2 + this.z ** 2);
 

@@ -6,11 +6,14 @@ class Matrix {
   }
 
   /**
-   * multiply this with another matrix
-   * @param {Matrix} m
+   * multiply this with another matrix or by scalar
+   * @param {Matrix | number} m
    * @returns {Matrix}
    */
   multiply(m) {
+    if (typeof m === "number")
+      return new Matrix(this.matrix.map((row) => row.map((cell) => cell * m)));
+
     const m1 = this.rows;
     const m2 = this.cols;
     const n2 = m.cols;
@@ -80,6 +83,88 @@ class Matrix {
 
   print() {
     console.log(this.matrix.map((row) => row.join(" ")).join("\n"));
+  }
+
+  cofactor(i, j) {
+    const minor = [];
+    for (let x = 0; x < this.rows; x++) {
+      if (x === i) continue;
+
+      const row = [];
+      for (let y = 0; y < this.cols; y++) {
+        if (y === j) continue;
+
+        row.push(this.matrix[x][y]);
+      }
+
+      minor.push(row);
+    }
+
+    return new Matrix(minor).determinant;
+  }
+
+  get transpose() {
+    const m = this.matrix;
+    const mResult = makeArray(this.cols);
+    for (let i = 0; i < this.cols; i++) {
+      for (let j = 0; j < this.rows; j++) {
+        mResult[i][j] = m[j][i];
+      }
+    }
+
+    return new Matrix(mResult);
+  }
+
+  get determinant() {
+    if (this.rows !== this.cols) {
+      throw new Error("Matrix is not square");
+    }
+
+    if (this.rows === 2) {
+      return (
+        this.matrix[0][0] * this.matrix[1][1] -
+        this.matrix[0][1] * this.matrix[1][0]
+      );
+    }
+
+    let a = 0;
+    let b = 0;
+    for (let i = 0; i <= this.cols - 1; i++) {
+      a +=
+        this.matrix[0][i] *
+        this.matrix[1][(i + 1) % this.cols] *
+        this.matrix[2][(i + 2) % this.cols];
+      b +=
+        this.matrix[0][(i + 2) % this.cols] *
+        this.matrix[1][(i + 1) % this.cols] *
+        this.matrix[2][i];
+    }
+
+    const det = a - b;
+    return det;
+  }
+
+  get adjoint() {
+    const mResult = makeArray(this.rows);
+    let sign = 1;
+    for (let i = 0; i < this.rows; i++) {
+      for (let j = 0; j < this.cols; j++) {
+        mResult[i][j] = sign * this.cofactor(i, j);
+
+        sign = -sign;
+      }
+    }
+
+    return new Matrix(mResult).transpose;
+  }
+
+  get inverse() {
+    const det = this.determinant;
+    if (det === 0) {
+      throw new Error("Matrix is not invertible");
+    }
+
+    return this.adjoint.multiply(1 / det);
   }
 
   /**
@@ -156,6 +241,25 @@ class Matrix {
       [0, f, 0, 0],
       [0, 0, q, -q * znear],
       [0, 0, 1, 0],
+    ]);
+  }
+
+  static pointAt(pos, target, up) {
+    // Calculate new forward direction
+    const newForward = target.subtract(pos).normalize();
+
+    // Calculate new up direction
+    const a = newForward.multiply(up.dot(newForward));
+    const newUp = up.subtract(a).normalize();
+
+    // New right direction is easy, because it's just cross product
+    const newRight = newUp.cross(newForward);
+
+    return new Matrix([
+      [newRight.x, newUp.x, newForward.x, pos.x],
+      [newRight.y, newUp.y, newForward.y, pos.y],
+      [newRight.z, newUp.z, newForward.z, pos.z],
+      [0, 0, 0, 1],
     ]);
   }
 }
