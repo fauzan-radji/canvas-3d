@@ -31,7 +31,9 @@ openfileButton.addEventListener("click", async (e) => {
 const object = Shape3d.fromString({ str: AXIS, size: 0.5 });
 scene.addObjects(object);
 
-draw();
+// step back a lil bit before rendering
+scene.camera.z -= 7;
+scene.render();
 const fps = 20;
 
 // setInterval(() => {
@@ -41,16 +43,8 @@ const fps = 20;
 //       .rotateY(1.5 / (fps / 20))
 //       .rotateZ(0.5 / (fps / 20));
 
-//   draw();
+//   scene.render();
 // }, 1000 / fps);
-
-function draw() {
-  for (const object of scene.objects) object.translateZ(7);
-
-  scene.render();
-
-  for (const object of scene.objects) object.translateZ(-7);
-}
 
 window.addEventListener("resize", () => {
   scene.resize(innerWidth, innerHeight - 51);

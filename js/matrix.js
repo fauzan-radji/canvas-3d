@@ -81,8 +81,11 @@ class Matrix {
     return Vector.fromMatrix(this);
   }
 
-  print() {
-    console.log(this.matrix.map((row) => row.join(" ")).join("\n"));
+  print(line = 0) {
+    console.log(
+      this.matrix.map((row) => row.join(" ")).join("\n"),
+      "\nat line: " + line
+    );
   }
 
   cofactor(i, j) {
@@ -165,6 +168,44 @@ class Matrix {
     }
 
     return this.adjoint.multiply(1 / det);
+  }
+
+  get quickInverse() {
+    const matrix = makeArray(this.rows);
+
+    matrix[0][0] = this.matrix[0][0];
+    matrix[0][1] = this.matrix[0][1];
+    matrix[0][2] = this.matrix[0][2];
+    matrix[0][3] = -(
+      this.matrix[3][0] * matrix[0][0] +
+      this.matrix[3][1] * matrix[0][1] +
+      this.matrix[3][2] * matrix[0][2]
+    );
+
+    matrix[1][0] = this.matrix[1][0];
+    matrix[1][1] = this.matrix[1][1];
+    matrix[1][2] = this.matrix[1][2];
+    matrix[1][3] = -(
+      this.matrix[3][0] * matrix[1][0] +
+      this.matrix[3][1] * matrix[1][1] +
+      this.matrix[3][2] * matrix[1][2]
+    );
+
+    matrix[2][0] = this.matrix[2][0];
+    matrix[2][1] = this.matrix[2][1];
+    matrix[2][2] = this.matrix[2][2];
+    matrix[2][3] = -(
+      this.matrix[3][0] * matrix[2][0] +
+      this.matrix[3][1] * matrix[2][1] +
+      this.matrix[3][2] * matrix[2][2]
+    );
+
+    matrix[3][0] = 0;
+    matrix[3][1] = 0;
+    matrix[3][2] = 0;
+    matrix[3][3] = 1;
+
+    return new Matrix(matrix);
   }
 
   /**
@@ -256,10 +297,10 @@ class Matrix {
     const newRight = newUp.cross(newForward);
 
     return new Matrix([
-      [newRight.x, newUp.x, newForward.x, pos.x],
-      [newRight.y, newUp.y, newForward.y, pos.y],
-      [newRight.z, newUp.z, newForward.z, pos.z],
-      [0, 0, 0, 1],
+      [newRight.x, newRight.y, newRight.z, 0],
+      [newUp.x, newUp.y, newUp.z, 0],
+      [newForward.x, newForward.y, newForward.z, 0],
+      [pos.x, pos.y, pos.z, 1],
     ]);
   }
 }

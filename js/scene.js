@@ -17,6 +17,9 @@ class Scene {
 
     this.objects_ = [];
     this.triangles_ = [];
+
+    this.vUp = new Vector(0, 1, 0);
+    this.vLookDir = new Vector(0, 0, 1);
   }
 
   addObjects(...objects) {
@@ -28,19 +31,28 @@ class Scene {
 
   sortTriangles() {
     this.triangles.sort((a, b) => {
-      const z1 = (a.p1.z + a.p2.z + a.p3.z) / 3;
-      const z2 = (b.p1.z + b.p2.z + b.p3.z) / 3;
+      const z1 = (a.points[0].z + a.points[1].z + a.points[2].z) / 3;
+      const z2 = (b.points[0].z + b.points[1].z + b.points[2].z) / 3;
       return z2 - z1;
     });
   }
 
   render() {
+    this.vTarget = this.camera.add(this.vLookDir);
+
+    const matCamera = Matrix.pointAt(this.camera, this.vTarget, this.vUp);
+
+    const matView = matCamera.quickInverse;
+
     this.sortTriangles();
 
     this.canvas.clear();
     for (const tri of this.triangles) {
       if (!tri.isFacingCamera(this.camera)) continue;
-      tri.draw(this);
+
+      const triViewed = tri.transform(matView);
+
+      triViewed.draw(this);
     }
   }
 

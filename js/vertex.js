@@ -15,4 +15,13 @@ class Vertex extends Vector {
 
     scene.canvas.beginPath().line(p1, p2).stroke().closePath();
   }
+
+  /**
+   * Convert matrix to Vertex
+   * @param {Matrix} m
+   * @returns {Vertex}
+   */
+  static fromMatrix(m) {
+    return new Vertex(...m.matrix.flat());
+  }
 }
