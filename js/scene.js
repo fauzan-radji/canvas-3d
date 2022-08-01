@@ -17,9 +17,6 @@ class Scene {
 
     this.objects_ = [];
     this.triangles_ = [];
-
-    this.vUp = new Vector(0, 1, 0);
-    this.vLookDir = new Vector(0, 0, 1);
   }
 
   addObjects(...objects) {
@@ -38,10 +35,8 @@ class Scene {
   }
 
   render() {
-    this.vTarget = this.camera.add(this.vLookDir);
-
-    const matCamera = Matrix.pointAt(this.camera, this.vTarget, this.vUp);
-
+    const vTarget = this.camera.vTarget;
+    const matCamera = this.camera.pointAt(vTarget);
     const matView = matCamera.quickInverse;
 
     this.sortTriangles();

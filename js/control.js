@@ -1,5 +1,6 @@
 const startPoint = { x: 0, y: 0 };
 const moves = { x: 0, y: 0 };
+const SPACE = " ";
 let mousedown = false;
 
 window.addEventListener("mousedown", (e) => {
@@ -22,7 +23,51 @@ window.addEventListener("mousemove", (e) => {
   startPoint.x = e.clientX;
   startPoint.y = e.clientY;
 
-  scene.camera.x += moves.x;
-  scene.camera.y += moves.y;
+  scene.camera.yaw -= moves.x * 0.5;
+  scene.camera.y += moves.y * 0.1;
+  scene.render();
+});
+
+window.addEventListener("keydown", (e) => {
+  switch (e.key) {
+    case "W":
+    case "w":
+      scene.camera.forward(0.1);
+      break;
+
+    case "S":
+    case "s":
+      scene.camera.backward(0.1);
+      break;
+
+    case "A":
+    case "a":
+      scene.camera.left(0.1);
+      break;
+
+    case "D":
+    case "d":
+      scene.camera.right(0.1);
+      break;
+
+    case "ArrowLeft":
+      scene.camera.turnLeft(1);
+      break;
+
+    case "ArrowRight":
+      scene.camera.turnRight(1);
+      break;
+
+    case "ArrowUp":
+    case SPACE:
+      scene.camera.up(0.1);
+      break;
+
+    case "ArrowDown":
+    case "Shift":
+      scene.camera.down(0.1);
+      break;
+  }
+
   scene.render();
 });

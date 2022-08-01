@@ -7,7 +7,7 @@ const canvas = new Canvas({
 const fov = 90;
 const znear = 0.1;
 const zfar = 1000;
-const vCamera = new Vector(0, 0, 0);
+const vCamera = new Camera(0, 0, 0);
 const vLightDirection = new Vector(0, 0, -1).normalize();
 
 const scene = new Scene({
@@ -25,14 +25,14 @@ openfileButton.addEventListener("click", async (e) => {
   const object = await Shape3d.fromFile();
 
   scene.addObjects(object);
-  draw();
+  scene.render();
 });
 
 const object = Shape3d.fromString({ str: AXIS, size: 0.5 });
 scene.addObjects(object);
 
 // step back a lil bit before rendering
-scene.camera.z -= 7;
+scene.camera.backward(7);
 scene.render();
 const fps = 20;
 
@@ -48,7 +48,7 @@ const fps = 20;
 
 window.addEventListener("resize", () => {
   scene.resize(innerWidth, innerHeight - 51);
-  for (const object of scene.objects) draw(object);
+  scene.render();
 });
 
 function sleep(ms) {
