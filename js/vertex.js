@@ -1,5 +1,5 @@
 class Vertex extends Vector {
-  constructor(x, y, z = undefined, w = undefined) {
+  constructor(x, y, z = 0, w = 0) {
     super(x, y, z, w);
   }
 

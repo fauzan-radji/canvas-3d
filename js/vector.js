@@ -1,11 +1,9 @@
 class Vector {
-  constructor(x, y, z = undefined, w = undefined) {
+  constructor(x, y, z = 0, w = 0) {
     this.x = x;
     this.y = y;
-
-    if (typeof z === "number") this.z = z;
-
-    if (typeof w === "number") this.w = w;
+    this.z = z;
+    this.w = w;
   }
 
   /**
@@ -16,11 +14,14 @@ class Vector {
   project(scene) {
     // by default, the z axis is pointing towards the camera, so we need to reverse it
     const z = -this.z;
+    const { x, y } = this;
+    const w = 1;
 
-    const projected = new Vertex(this.x, this.y, z, 1)
-      .toMatrix()
-      .perspective(scene.fov, scene.aspectRatio, scene.znear, scene.zfar)
-      .toVector();
+    const { fov, aspectRatio, znear, zfar } = scene;
+
+    const projected = new Vertex(x, y, z, w).transform(
+      Matrix.perspective(fov, aspectRatio, znear, zfar)
+    );
 
     if (z !== 0) {
       projected.x /= z;
@@ -44,11 +45,7 @@ class Vector {
    * @param {number} angle in degrees
    */
   rotateX(angle) {
-    const newPoint = this.toMatrix().rotateX(angle).toVector();
-
-    this.x = newPoint.x;
-    this.y = newPoint.y;
-    this.z = newPoint.z;
+    this.transform(Matrix.rotateX(angle));
 
     return this;
   }
@@ -58,21 +55,13 @@ class Vector {
    * @param {number} angle in degrees
    */
   rotateY(angle) {
-    const newPoint = this.toMatrix().rotateY(angle).toVector();
-
-    this.x = newPoint.x;
-    this.y = newPoint.y;
-    this.z = newPoint.z;
+    this.transform(Matrix.rotateY(angle));
 
     return this;
   }
 
   rotateZ(angle) {
-    const newPoint = this.toMatrix().rotateZ(angle).toVector();
-
-    this.x = newPoint.x;
-    this.y = newPoint.y;
-    this.z = newPoint.z;
+    this.transform(Matrix.rotateZ(angle));
 
     return this;
   }
@@ -89,6 +78,46 @@ class Vector {
 
   translateZ(distance) {
     this.z += distance;
+    return this;
+  }
+
+  /**
+   * Transform vector by matrix
+   * @param {Matrix} m a 4x4 transform matrix
+   * @returns {Vector}
+   */
+  transform(m) {
+    const { x, y, z, w } = this;
+
+    const newX =
+      x * m.matrix[0][0] +
+      y * m.matrix[0][1] +
+      z * m.matrix[0][2] +
+      w * m.matrix[0][3];
+
+    const newY =
+      x * m.matrix[1][0] +
+      y * m.matrix[1][1] +
+      z * m.matrix[1][2] +
+      w * m.matrix[1][3];
+
+    const newZ =
+      x * m.matrix[2][0] +
+      y * m.matrix[2][1] +
+      z * m.matrix[2][2] +
+      w * m.matrix[2][3];
+
+    const newW =
+      x * m.matrix[3][0] +
+      y * m.matrix[3][1] +
+      z * m.matrix[3][2] +
+      w * m.matrix[3][3];
+
+    this.x = newX;
+    this.y = newY;
+    this.z = newZ;
+    this.w = newW;
+
     return this;
   }
 
@@ -208,5 +237,46 @@ class Vector {
     const lineStartToEnd = lineEnd.subtract(lineStart);
     const lineToIntersect = lineStartToEnd.multiply(t);
     return lineStart.add(lineToIntersect);
+  }
+
+  /**
+   * Transform vector by matrix
+   * @param {Vector} v a Vector to transform
+   * @param {Matrix} m a 4x4 transform matrix
+   * @returns {Vector}
+   */
+  static transform(v, m) {
+    const { x, y, z, w } = v;
+
+    const newX =
+      x * m.matrix[0][0] +
+      y * m.matrix[0][1] +
+      z * m.matrix[0][2] +
+      w * m.matrix[0][3];
+
+    const newY =
+      x * m.matrix[1][0] +
+      y * m.matrix[1][1] +
+      z * m.matrix[1][2] +
+      w * m.matrix[1][3];
+
+    const newZ =
+      x * m.matrix[2][0] +
+      y * m.matrix[2][1] +
+      z * m.matrix[2][2] +
+      w * m.matrix[2][3];
+
+    const newW =
+      x * m.matrix[3][0] +
+      y * m.matrix[3][1] +
+      z * m.matrix[3][2] +
+      w * m.matrix[3][3];
+
+    v.x = newX;
+    v.y = newY;
+    v.z = newZ;
+    v.w = newW;
+
+    return v;
   }
 }

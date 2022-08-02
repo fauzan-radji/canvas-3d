@@ -19,7 +19,8 @@ class Shape3d {
    * @param {number} angle in degrees
    */
   rotateX(angle) {
-    for (const point of this.points) point.rotateX(angle);
+    const m = Matrix.rotateX(angle);
+    for (const point of this.points) point.transform(m);
 
     return this;
   }
@@ -29,7 +30,8 @@ class Shape3d {
    * @param {number} angle in degrees
    */
   rotateY(angle) {
-    for (const point of this.points) point.rotateY(angle);
+    const m = Matrix.rotateY(angle);
+    for (const point of this.points) point.transform(m);
 
     return this;
   }
@@ -39,26 +41,14 @@ class Shape3d {
    * @param {number} angle in degrees
    */
   rotateZ(angle) {
-    for (const point of this.points) point.rotateZ(angle);
+    const m = Matrix.rotateZ(angle);
+    for (const point of this.points) point.transform(m);
 
     return this;
   }
 
   translateZ(distance) {
     for (const point of this.points) point.translateZ(distance);
-
-    return this;
-  }
-
-  draw(scene) {
-    const camera = scene.camera;
-    const trianglesFacingCamera = this.triangles.filter((triangle) =>
-      triangle.isFacingCamera(camera)
-    );
-
-    for (const tri of trianglesFacingCamera) {
-      tri.draw(scene);
-    }
 
     return this;
   }

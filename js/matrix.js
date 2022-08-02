@@ -170,6 +170,7 @@ class Matrix {
     return this.adjoint.multiply(1 / det);
   }
 
+  // Only for Rotation/Translation Matrices
   get quickInverse() {
     const matrix = makeArray(this.rows);
 
@@ -218,9 +219,10 @@ class Matrix {
     angle = (angle * Math.PI) / 180;
 
     return new Matrix([
-      [1, 0, 0],
-      [0, Math.cos(angle), -Math.sin(angle)],
-      [0, Math.sin(angle), Math.cos(angle)],
+      [1, 0, 0, 0],
+      [0, Math.cos(angle), -Math.sin(angle), 0],
+      [0, Math.sin(angle), Math.cos(angle), 0],
+      [0, 0, 0, 1],
     ]);
   }
 
@@ -237,9 +239,10 @@ class Matrix {
     angle = (angle * Math.PI) / -180;
 
     return new Matrix([
-      [Math.cos(angle), 0, Math.sin(angle)],
-      [0, 1, 0],
-      [-Math.sin(angle), 0, Math.cos(angle)],
+      [Math.cos(angle), 0, Math.sin(angle), 0],
+      [0, 1, 0, 0],
+      [-Math.sin(angle), 0, Math.cos(angle), 0],
+      [0, 0, 0, 1],
     ]);
   }
 
@@ -256,21 +259,22 @@ class Matrix {
     angle = (angle * Math.PI) / -180;
 
     return new Matrix([
-      [Math.cos(angle), -Math.sin(angle), 0],
-      [Math.sin(angle), Math.cos(angle), 0],
-      [0, 0, 1],
+      [Math.cos(angle), -Math.sin(angle), 0, 0],
+      [Math.sin(angle), Math.cos(angle), 0, 0],
+      [0, 0, 1, 0],
+      [0, 0, 0, 1],
     ]);
   }
 
   /**
    *
    * @param {number} fov field of view in degrees
-   * @param {number} aspect aspect ratio of the screen (width / height)
+   * @param {number} aspectRatio aspect ratio of the screen (width / height)
    * @param {number} znear near plane distance (closest objects)
    * @param {number} zfar far plane distance (farthest objects)
    * @returns {Matrix}
    */
-  static perspective(fov, aspect, znear, zfar) {
+  static perspective(fov, aspectRatio, znear, zfar) {
     // convert the angle to radians
     fov = (fov * Math.PI) / 180;
 
@@ -278,7 +282,7 @@ class Matrix {
     const q = zfar / (zfar - znear);
 
     return new Matrix([
-      [aspect * f, 0, 0, 0],
+      [aspectRatio * f, 0, 0, 0],
       [0, f, 0, 0],
       [0, 0, q, -q * znear],
       [0, 0, 1, 0],

@@ -1,21 +1,19 @@
 class Triangle {
   /**
    *
+   * @param {Vertex | Vector} p0
    * @param {Vertex | Vector} p1
    * @param {Vertex | Vector} p2
-   * @param {Vertex | Vector} p3
    */
-  constructor(p1, p2, p3) {
-    this.points = [p1, p2, p3];
+  constructor(p0, p1, p2) {
+    this.points = [p0, p1, p2];
     this.luminance = 1;
   }
 
   transform(m) {
-    const newPoints = this.points.map((p) => {
-      const v = new Vector(p.x, p.y, p.z, 1);
-
-      return Vertex.fromMatrix(m.multiply(v.toMatrix()));
-    });
+    const newPoints = this.points.map((p) =>
+      new Vertex(p.x, p.y, p.z, 1).transform(m)
+    );
 
     return new Triangle(newPoints[0], newPoints[1], newPoints[2]);
   }
@@ -29,13 +27,17 @@ class Triangle {
     const p1 = this.points[1].project(scene);
     const p2 = this.points[2].project(scene);
 
-    return new Triangle(p0, p1, p2);
+    const newTriangle = new Triangle(p0, p1, p2);
+    newTriangle.luminance = this.luminance;
+
+    return newTriangle;
   }
 
   draw(scene) {
     const p0 = this.points[0];
     const p1 = this.points[1];
     const p2 = this.points[2];
+
     scene.canvas
       .beginPath()
       .moveTo(p0)

@@ -28,13 +28,13 @@ openfileButton.addEventListener("click", async (e) => {
   draw();
 });
 
-const object = Shape3d.fromString({ str: AXIS, size: 0.5 });
+const object = Shape3d.fromString({ str: MOUNTAINS, size: 0.5 });
 scene.addObjects(object);
 
-// step back a lil bit before rendering
-scene.camera.backward(7);
+// go up a lil bit before rendering
+scene.camera.up(5);
 draw();
-const fps = 20;
+// const fps = 10;
 
 // setInterval(() => {
 //   for (const object of scene.objects)

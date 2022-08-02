@@ -23,8 +23,9 @@ window.addEventListener("mousemove", (e) => {
   startPoint.x = e.clientX;
   startPoint.y = e.clientY;
 
-  scene.camera.yaw -= moves.x * 0.5;
-  scene.camera.y += moves.y * 0.1;
+  scene.camera.turnLeft(moves.x * 0.5);
+  scene.camera.turnUp(moves.y * 0.5);
+
   draw();
 });
 
@@ -50,6 +51,14 @@ window.addEventListener("keydown", (e) => {
       scene.camera.right(0.1);
       break;
 
+    case SPACE:
+      scene.camera.up(0.1);
+      break;
+
+    case "Shift":
+      scene.camera.down(0.1);
+      break;
+
     case "ArrowLeft":
       scene.camera.turnLeft(1);
       break;
@@ -59,13 +68,11 @@ window.addEventListener("keydown", (e) => {
       break;
 
     case "ArrowUp":
-    case SPACE:
-      scene.camera.up(0.1);
+      scene.camera.turnUp(1);
       break;
 
     case "ArrowDown":
-    case "Shift":
-      scene.camera.down(0.1);
+      scene.camera.turnDown(1);
       break;
   }
 

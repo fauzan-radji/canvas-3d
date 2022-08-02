@@ -37,9 +37,7 @@ class Scene {
   }
 
   render() {
-    const vTarget = this.camera.vTarget;
-    const matCamera = this.camera.pointAt(vTarget);
-    const matView = matCamera.quickInverse;
+    const matView = this.camera.matrix.quickInverse;
 
     const trianglesClipped = [];
 
@@ -49,6 +47,7 @@ class Scene {
       const triViewed = tri.transform(matView);
       triViewed.calculateLuminance(this.lightDirection);
 
+      // clip against znear plane
       const clippedTriangles = triViewed.clipAgainstPlane(
         new Vector(0, 0, this.znear),
         new Vector(0, 0, 1)
@@ -85,14 +84,20 @@ class Scene {
       },
     ];
 
-    for (const plane of planes) {
-      for (const tri of trianglesClipped) {
-        const clippedTriangles = tri
-          .project(this)
-          .clipAgainstPlane(plane.point, plane.normal);
+    for (let tri of trianglesClipped) {
+      tri = tri.project(this);
+
+      for (const plane of planes) {
+        const clippedTriangles = tri.clipAgainstPlane(
+          plane.point,
+          plane.normal
+        );
+
         if (clippedTriangles.length <= 0) continue;
+
         for (const clipped of clippedTriangles)
           clipped.luminance = tri.luminance;
+
         trianglesToRender.push(...clippedTriangles);
       }
     }
@@ -107,12 +112,12 @@ class Scene {
     }
   }
 
-  stroke() {
-    this.canvas.clear();
-    for (const tri of this.triangles) {
-      tri.stroke(this, "#f00");
-    }
-  }
+  // stroke() {
+  //   this.canvas.clear();
+  //   for (const tri of this.triangles) {
+  //     tri.stroke(this, "#f00");
+  //   }
+  // }
 
   resize(width, height) {
     this.canvas.resize(width, height);
