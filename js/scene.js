@@ -11,6 +11,8 @@ class Scene {
     this.znear = znear;
     this.zfar = zfar;
     this.canvas = canvas;
+    this.width = canvas.width;
+    this.height = canvas.height;
     this.aspectRatio = canvas.height / canvas.width;
     this.camera = camera;
     this.lightDirection = lightDirection;
@@ -39,10 +41,8 @@ class Scene {
     const matCamera = this.camera.pointAt(vTarget);
     const matView = matCamera.quickInverse;
 
-    this.sortTriangles();
-    const trianglesToRender = [];
+    const trianglesClipped = [];
 
-    this.canvas.clear();
     for (const tri of this.triangles) {
       if (!tri.isFacingCamera(this.camera)) continue;
 
@@ -56,9 +56,48 @@ class Scene {
 
       for (const tri of clippedTriangles) tri.luminance = triViewed.luminance;
 
-      trianglesToRender.push(...clippedTriangles);
+      trianglesClipped.push(...clippedTriangles);
     }
 
+    Scene.sortTriangles(trianglesClipped);
+
+    const trianglesToRender = [];
+    const planes = [
+      // Top
+      {
+        point: new Vector(0, 0, 0),
+        normal: new Vector(0, 1, 0),
+      },
+      // Bottom
+      {
+        point: new Vector(0, this.height - 1, 0),
+        normal: new Vector(0, -1, 0),
+      },
+      // Left
+      {
+        point: new Vector(0, 0, 0),
+        normal: new Vector(1, 0, 0),
+      },
+      // Right
+      {
+        point: new Vector(this.width - 1, 0, 0),
+        normal: new Vector(-1, 0, 0),
+      },
+    ];
+
+    for (const plane of planes) {
+      for (const tri of trianglesClipped) {
+        const clippedTriangles = tri
+          .project(this)
+          .clipAgainstPlane(plane.point, plane.normal);
+        if (clippedTriangles.length <= 0) continue;
+        for (const clipped of clippedTriangles)
+          clipped.luminance = tri.luminance;
+        trianglesToRender.push(...clippedTriangles);
+      }
+    }
+
+    this.canvas.clear();
     for (const tri of trianglesToRender) {
       tri.draw(this);
 
@@ -77,6 +116,8 @@ class Scene {
 
   resize(width, height) {
     this.canvas.resize(width, height);
+    this.width = width;
+    this.height = height;
     this.aspectRatio = height / width;
   }
 
@@ -142,5 +183,13 @@ class Scene {
 
   get triangles() {
     return this.triangles_;
+  }
+
+  static sortTriangles(triangles) {
+    triangles.sort((a, b) => {
+      const z1 = (a.points[0].z + a.points[1].z + a.points[2].z) / 3;
+      const z2 = (b.points[0].z + b.points[1].z + b.points[2].z) / 3;
+      return z2 - z1;
+    });
   }
 }

@@ -24,17 +24,24 @@ class Triangle {
     this.luminance = this.normal.dot(lightDirection);
   }
 
-  draw(scene) {
-    const p1 = this.points[0].project(scene);
-    const p2 = this.points[1].project(scene);
-    const p3 = this.points[2].project(scene);
+  project(scene) {
+    const p0 = this.points[0].project(scene);
+    const p1 = this.points[1].project(scene);
+    const p2 = this.points[2].project(scene);
 
+    return new Triangle(p0, p1, p2);
+  }
+
+  draw(scene) {
+    const p0 = this.points[0];
+    const p1 = this.points[1];
+    const p2 = this.points[2];
     scene.canvas
       .beginPath()
-      .moveTo(p1)
-      .lineTo(p2)
-      .lineTo(p3)
+      .moveTo(p0)
       .lineTo(p1)
+      .lineTo(p2)
+      .lineTo(p0)
       .fill(this.color)
       .stroke(this.color)
       .closePath();
@@ -45,16 +52,16 @@ class Triangle {
   }
 
   stroke(scene, color = "#000") {
-    const p1 = this.points[0].project(scene);
-    const p2 = this.points[1].project(scene);
-    const p3 = this.points[2].project(scene);
+    const p0 = this.points[0];
+    const p1 = this.points[1];
+    const p2 = this.points[2];
 
     scene.canvas
       .beginPath()
-      .moveTo(p1)
-      .lineTo(p2)
-      .lineTo(p3)
+      .moveTo(p0)
       .lineTo(p1)
+      .lineTo(p2)
+      .lineTo(p0)
       .stroke(color)
       .closePath();
   }
