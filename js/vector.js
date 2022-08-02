@@ -141,10 +141,29 @@ class Vector {
     return new Vector(this.x * k, this.y * k, this.z * k);
   }
 
+  /**
+   * Divide this Vector by k
+   * @param {number} k scaling factor
+   * @returns {Vector}
+   */
+  divide(k) {
+    return new Vector(this.x / k, this.y / k, this.z / k);
+  }
+
   normalize() {
     const length = Math.sqrt(this.x ** 2 + this.y ** 2 + this.z ** 2);
 
     return new Vector(this.x / length, this.y / length, this.z / length);
+  }
+
+  /**
+   * Return signed shortest distance from point to plane, plane normal must be normalised
+   * @param {Vector} plane_p a Point in a Plane
+   * @param {Vector} plane_n a Normal in a Plane
+   * @returns {number}
+   */
+  distance(plane_p, plane_n) {
+    return this.dot(plane_n) - plane_n.dot(plane_p);
   }
 
   /**
@@ -170,5 +189,24 @@ class Vector {
    */
   static fromMatrix(m) {
     return new Vector(...m.matrix.flat());
+  }
+
+  /**
+   * Test and returning a Point where a Line intersects with a Plane
+   * @param {Vector} plane_p a Point in a Plane
+   * @param {Vector} plane_n Normal vector to the Plane
+   * @param {Vector} lineStart Line Start
+   * @param {Vector} lineEnd Line End
+   * @return {Vector}
+   */
+  static intersectPlane(plane_p, plane_n, lineStart, lineEnd) {
+    plane_n = plane_n.normalize();
+    const plane_d = -plane_n.dot(plane_p);
+    const ad = lineStart.dot(plane_n);
+    const bd = lineEnd.dot(plane_n);
+    const t = (-plane_d - ad) / (bd - ad);
+    const lineStartToEnd = lineEnd.subtract(lineStart);
+    const lineToIntersect = lineStartToEnd.multiply(t);
+    return lineStart.add(lineToIntersect);
   }
 }

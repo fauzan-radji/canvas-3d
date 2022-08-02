@@ -25,7 +25,7 @@ window.addEventListener("mousemove", (e) => {
 
   scene.camera.yaw -= moves.x * 0.5;
   scene.camera.y += moves.y * 0.1;
-  scene.render();
+  draw();
 });
 
 window.addEventListener("keydown", (e) => {
@@ -69,5 +69,5 @@ window.addEventListener("keydown", (e) => {
       break;
   }
 
-  scene.render();
+  draw();
 });

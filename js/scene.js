@@ -40,14 +40,31 @@ class Scene {
     const matView = matCamera.quickInverse;
 
     this.sortTriangles();
+    const trianglesToRender = [];
 
     this.canvas.clear();
     for (const tri of this.triangles) {
       if (!tri.isFacingCamera(this.camera)) continue;
 
       const triViewed = tri.transform(matView);
+      triViewed.calculateLuminance(this.lightDirection);
 
-      triViewed.draw(this);
+      const clippedTriangles = triViewed.clipAgainstPlane(
+        new Vector(0, 0, this.znear),
+        new Vector(0, 0, 1)
+      );
+
+      for (const tri of clippedTriangles) tri.luminance = triViewed.luminance;
+
+      trianglesToRender.push(...clippedTriangles);
+    }
+
+    for (const tri of trianglesToRender) {
+      tri.draw(this);
+
+      // for debugging
+      // tri.stroke(this, "#ff0");
+      // tri.drawNormal(this);
     }
   }
 
