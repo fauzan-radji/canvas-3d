@@ -8,15 +8,17 @@ https://fauzan-radji.github.io/canvas-3d/
 
 ## Controls
 
-- <kbd>W</kbd> or <kbd>w</kbd> to move **forward**
-- <kbd>S</kbd> or <kbd>s</kbd> to move **backward**
-- <kbd>A</kbd> or <kbd>a</kbd> and <kbd>D</kbd> or <kbd>d</kbd> to move along the **X axis**
+- <kbd>W</kbd> to move **forward**
+- <kbd>S</kbd> to move **backward**
+- <kbd>A</kbd> and <kbd>D</kbd> to move along the **X axis**
 - <kbd>Space</kbd> to move **up**
 - <kbd>Shift</kbd> to move **down**
 - <kbd>ArrowLeft</kbd> to **turn left**
 - <kbd>ArrowRight</kbd> to **turn right**
 - <kbd>ArrowUp</kbd> to **turn up**
 - <kbd>ArrowDown</kbd> to **turn Down**
+- <kbd>Z</kbd> to **zoom in**
+- <kbd>X</kbd> to **zoom out**
 
 Or you can just click and move the cursor. Drag to **Left**, **Right**, **Up** and **Down** to **turn Left**, **turn Right**, **turn Up** and **turn Down** respectively.
 

@@ -17,11 +17,7 @@ class Vector {
     const { x, y } = this;
     const w = 1;
 
-    const { fov, aspectRatio, znear, zfar } = scene;
-
-    const projected = new Vertex(x, y, z, w).transform(
-      Matrix.perspective(fov, aspectRatio, znear, zfar)
-    );
+    const projected = new Vertex(x, y, z, w).transform(scene.projectionMatrix);
 
     if (z !== 0) {
       projected.x /= z;

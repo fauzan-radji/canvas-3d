@@ -2,6 +2,7 @@ const startPoint = { x: 0, y: 0 };
 const moves = { x: 0, y: 0 };
 const SPACE = " ";
 let mousedown = false;
+const pressedKeys = [];
 
 window.addEventListener("mousedown", (e) => {
   startPoint.x = e.clientX;
@@ -23,58 +24,20 @@ window.addEventListener("mousemove", (e) => {
   startPoint.x = e.clientX;
   startPoint.y = e.clientY;
 
-  scene.camera.turnLeft(moves.x * 0.5);
-  scene.camera.turnUp(moves.y * 0.5);
-
-  draw();
+  scene.camera.turnLeft(moves.x * 0.25);
+  scene.camera.turnUp(moves.y * 0.25);
 });
 
 window.addEventListener("keydown", (e) => {
-  switch (e.key) {
-    case "W":
-    case "w":
-      scene.camera.forward(0.1);
-      break;
+  const key = e.key.toLowerCase();
+  if (pressedKeys.includes(key)) return;
 
-    case "S":
-    case "s":
-      scene.camera.backward(0.1);
-      break;
+  pressedKeys.push(key);
+});
 
-    case "A":
-    case "a":
-      scene.camera.left(0.1);
-      break;
+window.addEventListener("keyup", (e) => {
+  const index = pressedKeys.indexOf(e.key.toLowerCase());
+  if (index === -1) return;
 
-    case "D":
-    case "d":
-      scene.camera.right(0.1);
-      break;
-
-    case SPACE:
-      scene.camera.up(0.1);
-      break;
-
-    case "Shift":
-      scene.camera.down(0.1);
-      break;
-
-    case "ArrowLeft":
-      scene.camera.turnLeft(1);
-      break;
-
-    case "ArrowRight":
-      scene.camera.turnRight(1);
-      break;
-
-    case "ArrowUp":
-      scene.camera.turnUp(1);
-      break;
-
-    case "ArrowDown":
-      scene.camera.turnDown(1);
-      break;
-  }
-
-  draw();
+  pressedKeys.splice(index, 1);
 });

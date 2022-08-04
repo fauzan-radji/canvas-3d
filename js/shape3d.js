@@ -75,7 +75,7 @@ class Shape3d {
     return Shape3d.fromString({ str: contents, size, x, y, z });
   }
 
-  static fromString({ str, size = 1, x = 0, y = 0, z = 0 }) {
+  static fromString({ str, color, size = 1, x = 0, y = 0, z = 0 }) {
     const lines = str.split(/\n/g);
 
     const theObject = new Shape3d();
@@ -101,7 +101,12 @@ class Shape3d {
           p2 = theObject.points[+p2 - 1];
           p3 = theObject.points[+p3 - 1];
 
-          theObject.triangles.push(new Triangle(p1, p2, p3));
+          theObject.triangles.push(
+            new Triangle({
+              points: [p1, p2, p3],
+              color,
+            })
+          );
           break;
       }
     }

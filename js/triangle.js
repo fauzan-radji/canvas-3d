@@ -1,12 +1,18 @@
 class Triangle {
   /**
-   *
-   * @param {Vertex | Vector} p0
-   * @param {Vertex | Vector} p1
-   * @param {Vertex | Vector} p2
+   * Create Triangle
+   * @param {Object} properties - properties to set
+   * @param {Vertex[3]|Vector[3]} properties.points - points of the triangle
+   * @param {Object} properties.color - color of the triangle
+   * @param {number} properties.color.red - red value of the color
+   * @param {number} properties.color.green - green value of the color
+   * @param {number} properties.color.blue - blue value of the color
    */
-  constructor(p0, p1, p2) {
-    this.points = [p0, p1, p2];
+  constructor({ points, color }) {
+    this.points = points;
+    this.red = color.red;
+    this.green = color.green;
+    this.blue = color.blue;
     this.luminance = 1;
   }
 
@@ -15,11 +21,15 @@ class Triangle {
       new Vertex(p.x, p.y, p.z, 1).transform(m)
     );
 
-    return new Triangle(newPoints[0], newPoints[1], newPoints[2]);
+    const { red, green, blue } = this;
+    return new Triangle({
+      points: newPoints,
+      color: { red, green, blue },
+    });
   }
 
   calculateLuminance(lightDirection) {
-    this.luminance = this.normal.dot(lightDirection);
+    this.luminance = Math.max(0.1, this.normal.dot(lightDirection));
   }
 
   project(scene) {
@@ -27,7 +37,11 @@ class Triangle {
     const p1 = this.points[1].project(scene);
     const p2 = this.points[2].project(scene);
 
-    const newTriangle = new Triangle(p0, p1, p2);
+    const { red, green, blue } = this;
+    const newTriangle = new Triangle({
+      points: [p0, p1, p2],
+      color: { red, green, blue },
+    });
     newTriangle.luminance = this.luminance;
 
     return newTriangle;
@@ -45,7 +59,7 @@ class Triangle {
       .lineTo(p2)
       .lineTo(p0)
       .fill(this.color)
-      .stroke(this.color)
+      // .stroke(this.color)
       .closePath();
   }
 
@@ -72,20 +86,20 @@ class Triangle {
    * Draws the triangle normal direction
    * @param {Scene} scene
    */
-  drawNormal(scene) {
-    const center = this.center.project(scene);
-    const normalVector = this.center.add(this.normal.divide(8)).project(scene);
+  // drawNormal(scene) {
+  //   const center = this.center.project(scene);
+  //   const normalVector = this.center.add(this.normal.divide(8)).project(scene);
 
-    scene.canvas.beginPath().circle(center, 3).fill("#0ff").closePath();
-    scene.canvas.beginPath().circle(normalVector, 2).fill("#f00").closePath();
+  //   scene.canvas.beginPath().circle(center, 3).fill("#0ff").closePath();
+  //   scene.canvas.beginPath().circle(normalVector, 2).fill("#f00").closePath();
 
-    scene.canvas
-      .beginPath()
-      .moveTo(center)
-      .lineTo(normalVector)
-      .stroke("#0ff")
-      .closePath();
-  }
+  //   scene.canvas
+  //     .beginPath()
+  //     .moveTo(center)
+  //     .lineTo(normalVector)
+  //     .stroke("#0ff")
+  //     .closePath();
+  // }
 
   /**
    * Clipping this Triangle against a Plane and returning new Triangles
@@ -134,7 +148,17 @@ class Triangle {
       const p1 = Vector.intersectPlane(plane_p, plane_n, p0, outside[0]);
       const p2 = Vector.intersectPlane(plane_p, plane_n, p0, outside[1]);
 
-      return [new Triangle(p0, p1, p2)];
+      const { red, green, blue } = this;
+      return [
+        new Triangle({
+          points: [p0, p1, p2],
+          color: {
+            red,
+            green,
+            blue,
+          },
+        }),
+      ];
     }
 
     // 4. Two points inside and one point outside plane.
@@ -151,18 +175,63 @@ class Triangle {
       const p1_b = p2_a;
       const p2_b = Vector.intersectPlane(plane_p, plane_n, p0_b, outside[0]);
 
-      return [new Triangle(p0_a, p1_a, p2_a), new Triangle(p0_b, p1_b, p2_b)];
+      const { red, green, blue } = this;
+      return [
+        new Triangle({
+          points: [p0_a, p1_a, p2_a],
+          color: {
+            red,
+            green,
+            blue,
+          },
+        }),
+        new Triangle({
+          points: [p0_b, p1_b, p2_b],
+          color: {
+            red,
+            green,
+            blue,
+          },
+        }),
+      ];
     }
+  }
+
+  set red(red) {
+    this.red_ = red;
+  }
+
+  set green(green) {
+    this.green_ = green;
+  }
+
+  set blue(blue) {
+    this.blue_ = blue;
   }
 
   set luminance(lum) {
     this.luminance_ = lum;
-
-    this.color = `hsl(0,0%,${this.luminance * 80 + 10}%)`;
   }
 
   get luminance() {
     return this.luminance_;
+  }
+
+  get color() {
+    const lum = this.luminance;
+    return `rgb(${lum * this.red},${lum * this.green},${lum * this.blue})`;
+  }
+
+  get red() {
+    return this.red_;
+  }
+
+  get green() {
+    return this.green_;
+  }
+
+  get blue() {
+    return this.blue_;
   }
 
   get normal() {

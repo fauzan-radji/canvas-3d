@@ -1,59 +1,94 @@
+const openfileButton = document.getElementById("open-file");
+
+const camera = new Camera(0, 0, 0);
+const lightDirection = new Vector(0, 1, -1).normalize();
 const canvas = new Canvas({
   id: "canvas",
   width: innerWidth,
   height: innerHeight - 51,
 });
 
-const fov = 90;
-const znear = 0.1;
-const zfar = 1000;
-const vCamera = new Camera(0, 0, 0);
-const vLightDirection = new Vector(0, 0, -1).normalize();
-
 const scene = new Scene({
-  canvas: canvas,
-  fov,
-  znear,
-  zfar,
-  camera: vCamera,
-  lightDirection: vLightDirection,
+  fov: 90,
+  znear: 0.1,
+  zfar: 1000,
+  canvas,
+  camera,
+  lightDirection,
 });
 
-const openfileButton = document.getElementById("open-file");
+const object = Shape3d.fromString({
+  str: MOUNTAINS,
+  size: 1.5,
+  color: {
+    red: 255,
+    green: 150,
+    blue: 60,
+  },
+});
+scene.addObjects(object);
+
+// go up a lil bit before rendering
+scene.camera.up(10);
+
+// controls
+scene.onEveryFrame = ({ object, camera }) => {
+  // pressedKeys just contains lowercase letters
+
+  // move forward
+  if (pressedKeys.includes("w")) camera.forward(0.5);
+
+  // move backward
+  if (pressedKeys.includes("s")) camera.backward(0.5);
+
+  // move left
+  if (pressedKeys.includes("a")) camera.left(0.5);
+
+  // move right
+  if (pressedKeys.includes("d")) camera.right(0.5);
+
+  // move up
+  if (pressedKeys.includes(SPACE)) camera.up(0.5);
+
+  // move down
+  if (pressedKeys.includes("shift")) camera.down(0.5);
+
+  // turn left
+  if (pressedKeys.includes("arrowleft")) camera.turnLeft(1);
+
+  // turn right
+  if (pressedKeys.includes("arrowright")) camera.turnRight(1);
+
+  // turn up
+  if (pressedKeys.includes("arrowup")) camera.turnUp(1);
+
+  // turn down
+  if (pressedKeys.includes("arrowdown")) camera.turnDown(1);
+
+  if (pressedKeys.includes("z")) {
+    // zoom in
+    scene.fov = 60;
+  } else if (pressedKeys.includes("x")) {
+    // zoom out
+    scene.fov = 120;
+  } else if (scene.fov !== 90) {
+    // zoom reset
+    scene.fov = 90;
+  }
+};
+
+// render
+scene.render();
 
 openfileButton.addEventListener("click", async (e) => {
   const object = await Shape3d.fromFile();
 
   scene.addObjects(object);
-  draw();
 });
-
-const object = Shape3d.fromString({ str: MOUNTAINS, size: 0.5 });
-scene.addObjects(object);
-
-// go up a lil bit before rendering
-scene.camera.up(5);
-draw();
-// const fps = 10;
-
-// setInterval(() => {
-//   for (const object of scene.objects)
-//     object
-//       .rotateX(1 / (fps / 20))
-//       .rotateY(1.5 / (fps / 20))
-//       .rotateZ(0.5 / (fps / 20));
-
-//   draw();
-// }, 1000 / fps);
 
 window.addEventListener("resize", () => {
   scene.resize(innerWidth, innerHeight - 51);
-  draw();
 });
-
-function draw() {
-  scene.render();
-}
 
 function sleep(ms) {
   return new Promise((resolve) => {
