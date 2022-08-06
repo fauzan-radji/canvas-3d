@@ -1,6 +1,6 @@
 # Canvas 3D
 
-3d graphics engine with vanilla js. It's a bit laggy, will be fixed soon.
+3d graphics engine with vanilla js.
 
 ## Demo
 
@@ -10,7 +10,8 @@ https://fauzan-radji.github.io/canvas-3d/
 
 - <kbd>W</kbd> to move **forward**
 - <kbd>S</kbd> to move **backward**
-- <kbd>A</kbd> and <kbd>D</kbd> to move along the **X axis**
+- <kbd>A</kbd> to move **left**
+- <kbd>D</kbd> to move **right**
 - <kbd>Space</kbd> to move **up**
 - <kbd>Shift</kbd> to move **down**
 - <kbd>ArrowLeft</kbd> to **turn left**

@@ -1,5 +1,5 @@
-class Shape3d {
-  constructor(size = 1, x = 0, y = 0, z = 0) {
+class Mesh {
+  constructor({ size = 1, x = 0, y = 0, z = 0 }) {
     this.size = size;
     this.x = x;
     this.y = y;
@@ -53,7 +53,7 @@ class Shape3d {
     return this;
   }
 
-  static async fromFile({ size = 1, x = 0, y = 0, z = 0 } = {}) {
+  static async fromFile({ size = 1, x = 0, y = 0, z = 0 }) {
     const pickerOpts = {
       types: [
         {
@@ -72,13 +72,13 @@ class Shape3d {
     const fileData = await fileHandle.getFile();
     const contents = await fileData.text();
 
-    return Shape3d.fromString({ str: contents, size, x, y, z });
+    return Mesh.fromString({ str: contents, size, x, y, z });
   }
 
   static fromString({ str, color, size = 1, x = 0, y = 0, z = 0 }) {
     const lines = str.split(/\n/g);
 
-    const theObject = new Shape3d();
+    const mesh = new Mesh({ size, x, y, z });
     const COMMENT = "#";
     const VERTEX = "v";
     const FACE = "f";
@@ -91,17 +91,17 @@ class Shape3d {
           const xPoint = rest[0] * size + x;
           const yPoint = rest[1] * size + y;
           const zPoint = rest[2] * size + z;
-          theObject.points.push(new Vertex(xPoint, yPoint, zPoint));
+          mesh.points.push(new Vector(xPoint, yPoint, zPoint));
           break;
 
         case FACE:
           let [p1, p2, p3] = rest;
 
-          p1 = theObject.points[+p1 - 1];
-          p2 = theObject.points[+p2 - 1];
-          p3 = theObject.points[+p3 - 1];
+          p1 = mesh.points[+p1 - 1];
+          p2 = mesh.points[+p2 - 1];
+          p3 = mesh.points[+p3 - 1];
 
-          theObject.triangles.push(
+          mesh.triangles.push(
             new Triangle({
               points: [p1, p2, p3],
               color,
@@ -111,6 +111,6 @@ class Shape3d {
       }
     }
 
-    return theObject;
+    return mesh;
   }
 }

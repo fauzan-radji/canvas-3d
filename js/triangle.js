@@ -1,14 +1,26 @@
 class Triangle {
+  #red;
+  #green;
+  #blue;
+  #luminance;
+
   /**
    * Create Triangle
    * @param {Object} properties - properties to set
-   * @param {Vertex[3]|Vector[3]} properties.points - points of the triangle
+   * @param {Vector[3]|Vector[3]} properties.points - points of the triangle
    * @param {Object} properties.color - color of the triangle
    * @param {number} properties.color.red - red value of the color
    * @param {number} properties.color.green - green value of the color
    * @param {number} properties.color.blue - blue value of the color
    */
-  constructor({ points, color }) {
+  constructor({
+    points,
+    color = {
+      red: 255,
+      green: 255,
+      blue: 255,
+    },
+  }) {
     this.points = points;
     this.red = color.red;
     this.green = color.green;
@@ -18,7 +30,7 @@ class Triangle {
 
   transform(m) {
     const newPoints = this.points.map((p) =>
-      new Vertex(p.x, p.y, p.z, 1).transform(m)
+      new Vector(p.x, p.y, p.z, 1).transform(m)
     );
 
     const { red, green, blue } = this;
@@ -51,6 +63,7 @@ class Triangle {
     const p0 = this.points[0];
     const p1 = this.points[1];
     const p2 = this.points[2];
+    const color = this.color;
 
     scene.canvas
       .beginPath()
@@ -58,8 +71,8 @@ class Triangle {
       .lineTo(p1)
       .lineTo(p2)
       .lineTo(p0)
-      .fill(this.color)
-      // .stroke(this.color)
+      .fill(color)
+      .stroke(color)
       .closePath();
   }
 
@@ -176,45 +189,38 @@ class Triangle {
       const p2_b = Vector.intersectPlane(plane_p, plane_n, p0_b, outside[0]);
 
       const { red, green, blue } = this;
+      const color = { red, green, blue };
       return [
         new Triangle({
           points: [p0_a, p1_a, p2_a],
-          color: {
-            red,
-            green,
-            blue,
-          },
+          color,
         }),
         new Triangle({
           points: [p0_b, p1_b, p2_b],
-          color: {
-            red,
-            green,
-            blue,
-          },
+          color,
         }),
       ];
     }
   }
 
   set red(red) {
-    this.red_ = red;
+    this.#red = red;
   }
 
   set green(green) {
-    this.green_ = green;
+    this.#green = green;
   }
 
   set blue(blue) {
-    this.blue_ = blue;
+    this.#blue = blue;
   }
 
   set luminance(lum) {
-    this.luminance_ = lum;
+    this.#luminance = lum;
   }
 
   get luminance() {
-    return this.luminance_;
+    return this.#luminance;
   }
 
   get color() {
@@ -223,15 +229,15 @@ class Triangle {
   }
 
   get red() {
-    return this.red_;
+    return this.#red;
   }
 
   get green() {
-    return this.green_;
+    return this.#green;
   }
 
   get blue() {
-    return this.blue_;
+    return this.#blue;
   }
 
   get normal() {

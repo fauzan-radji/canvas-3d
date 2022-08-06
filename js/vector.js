@@ -17,7 +17,7 @@ class Vector {
     const { x, y } = this;
     const w = 1;
 
-    const projected = new Vertex(x, y, z, w).transform(scene.projectionMatrix);
+    const projected = new Vector(x, y, z, w).transform(scene.projectionMatrix);
 
     if (z !== 0) {
       projected.x /= z;

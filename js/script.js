@@ -17,7 +17,7 @@ const scene = new Scene({
   lightDirection,
 });
 
-const object = Shape3d.fromString({
+const mesh = Mesh.fromString({
   str: MOUNTAINS,
   size: 1.5,
   color: {
@@ -26,13 +26,15 @@ const object = Shape3d.fromString({
     blue: 60,
   },
 });
-scene.addObjects(object);
+scene.addMesh(mesh);
 
 // go up a lil bit before rendering
 scene.camera.up(10);
 
 // controls
-scene.onEveryFrame = ({ object, camera }) => {
+scene.onEveryFrame = ({ meshes, camera }) => {
+  scene.lightDirection.rotateY(1);
+
   // pressedKeys just contains lowercase letters
 
   // move forward
@@ -81,9 +83,14 @@ scene.onEveryFrame = ({ object, camera }) => {
 scene.render();
 
 openfileButton.addEventListener("click", async (e) => {
-  const object = await Shape3d.fromFile();
+  const mesh = await Mesh.fromFile({
+    size: 1,
+    x: 0,
+    y: 0,
+    z: 0,
+  });
 
-  scene.addObjects(object);
+  scene.addObjects(mesh);
 });
 
 window.addEventListener("resize", () => {

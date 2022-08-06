@@ -1,4 +1,17 @@
 class Scene {
+  #fov;
+  #znear;
+  #zfar;
+  #canvas;
+  #camera;
+  #width;
+  #height;
+  #aspectRatio;
+  #lightDirection;
+  #onEveryFrame;
+  #meshes;
+  #triangles;
+
   constructor({
     canvas,
     fov = 90,
@@ -18,9 +31,9 @@ class Scene {
     this.lightDirection = lightDirection;
 
     this.updateProjectionMatrix();
-    this.objects_ = [];
-    this.triangles_ = [];
-    this.onEveryFrame_ = [];
+    this.#meshes = [];
+    this.#triangles = [];
+    this.#onEveryFrame = [];
 
     this.edges = [
       // Top
@@ -46,11 +59,9 @@ class Scene {
     ];
   }
 
-  addObjects(...objects) {
-    this.objects.push(...objects);
-    for (const object of objects) {
-      this.triangles.push(...object.triangles);
-    }
+  addMesh(mesh) {
+    this.meshes.push(mesh);
+    this.triangles.push(...mesh.triangles);
   }
 
   sortTriangles() {
@@ -63,8 +74,8 @@ class Scene {
 
   render() {
     if (this.onEveryFrame) {
-      const { camera, objects } = this;
-      this.onEveryFrame({ camera, objects });
+      const { camera, meshes } = this;
+      this.onEveryFrame({ camera, meshes });
     }
 
     const matView = this.camera.matrix.quickInverse;
@@ -154,99 +165,99 @@ class Scene {
   }
 
   set fov(fov) {
-    this.fov_ = fov;
+    this.#fov = fov;
 
     this.updateProjectionMatrix();
   }
 
   set znear(znear) {
-    this.znear_ = znear;
+    this.#znear = znear;
 
     this.updateProjectionMatrix();
   }
 
   set zfar(zfar) {
-    this.zfar_ = zfar;
+    this.#zfar = zfar;
 
     this.updateProjectionMatrix();
   }
 
   set canvas(canvas) {
-    this.canvas_ = canvas;
+    this.#canvas = canvas;
   }
 
   set camera(camera) {
-    this.camera_ = camera;
+    this.#camera = camera;
   }
 
   set width(width) {
-    this.width_ = width;
+    this.#width = width;
   }
 
   set height(height) {
-    this.height_ = height;
+    this.#height = height;
   }
 
   set aspectRatio(aspectRatio) {
-    this.aspectRatio_ = aspectRatio;
+    this.#aspectRatio = aspectRatio;
 
     this.updateProjectionMatrix();
   }
 
   set lightDirection(lightDirection) {
-    this.lightDirection_ = lightDirection;
+    this.#lightDirection = lightDirection;
   }
 
   set onEveryFrame(callbacks) {
-    this.onEveryFrame_ = callbacks;
+    this.#onEveryFrame = callbacks;
   }
 
   get fov() {
-    return this.fov_;
+    return this.#fov;
   }
 
   get znear() {
-    return this.znear_;
+    return this.#znear;
   }
 
   get zfar() {
-    return this.zfar_;
+    return this.#zfar;
   }
 
   get canvas() {
-    return this.canvas_;
+    return this.#canvas;
   }
 
   get camera() {
-    return this.camera_;
+    return this.#camera;
   }
 
   get width() {
-    return this.width_;
+    return this.#width;
   }
 
   get height() {
-    return this.height_;
+    return this.#height;
   }
 
   get aspectRatio() {
-    return this.aspectRatio_;
+    return this.#aspectRatio;
   }
 
   get lightDirection() {
-    return this.lightDirection_;
+    return this.#lightDirection;
   }
 
   get onEveryFrame() {
-    return this.onEveryFrame_;
+    return this.#onEveryFrame;
   }
 
-  get objects() {
-    return this.objects_;
+  get meshes() {
+    return this.#meshes;
   }
 
   get triangles() {
-    return this.triangles_;
+    return this.#triangles;
   }
 
   static sortTriangles(triangles) {
